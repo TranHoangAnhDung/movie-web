@@ -1,12 +1,12 @@
 import React from "react";
-import RatingIcon from "../assets/rating.png";
-import RatingHalff from "../assets/rating-half.png";
-import Img from "../assets/thelionking.jpeg";
-import Iconplay from "../assets/play-button.png";
+import RatingIcon from "../../assets/rating.png";
+import RatingHalff from "../../assets/rating-half.png";
+import Img from "../../assets/thelionking.jpeg";
+import Iconplay from "../../assets/play-button.png";
 
 const Banner = () => {
   return (
-    <div className="w-full h-[700px] bg-center bg-banner bg-no-repeat bg-cover relative">
+    <div className="w-full min-h-[700px] bg-center bg-banner bg-no-repeat bg-cover relative">
       <div className="absolute w-full h-full top-0 left-0 bg-black opacity-50" />
       <div className="w-full h-full flex items-center justify-center space-x-[30px] p-4 relative z-20">
         <div className="flex flex-col space-x-5 items-baseline w-[50%] ">
@@ -14,7 +14,7 @@ const Banner = () => {
             TV SHOW
           </p>
           <div className="flex flex-col space-y-4">
-            <h2 className="text-white text-[40px] font-bold"> LION KING</h2>
+            <h2 className="text-white text-[40px] font-bold font-mono"> LION KING</h2>
             <div className="flex items-center space-x-3">
               <img src={RatingIcon} alt="rating" className="w-8 h-8" />
               <img src={RatingIcon} alt="rating" className="w-8 h-8" />
@@ -22,7 +22,7 @@ const Banner = () => {
               <img src={RatingIcon} alt="rating" className="w-8 h-8" />
               <img src={RatingHalff} alt="rating" className="w-8 h-8" />
             </div>
-            <p className="text-white">
+            <p className="text-white line-clamp-5">
               Được sự giúp đỡ của bạn bè, Simba lẻn qua lũ linh cẩu ở Pride Rock
               và đối mặt với Scar, kẻ chế nhạo Simba về vai trò được cho là của
               hắn trong cái chết của Mufasa. Sau đó, Scar thì thầm với Simba

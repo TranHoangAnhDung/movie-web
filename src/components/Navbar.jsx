@@ -2,7 +2,7 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <div className="p-4 bg-black flex items-center justify-between">
+    <div className="p-4 bg-black flex items-center justify-between flex-wrap">
       <div className="flex items-center space-x-4">
         <h1 className="text-[30px] uppercase font-bold text-red-700">Movie</h1>
         <nav className="flex items-center space-x-4">

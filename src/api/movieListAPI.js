@@ -17,5 +17,15 @@ const MovieListAPI = {
   getCasts: (movie_id) => {
     return api.get(`/${movie_id}/credits`, { language: "en-US" });
   },
+  getMovieSearch: (keyword) => {
+    return api.get(`/search/movie`, {
+      params: {
+        query: keyword, // Truyền từ khóa tìm kiếm
+        page: 1,
+        include_adult: false,
+        language: "vi-VN", // Ngôn ngữ hiển thị
+      },
+    });
+  },
 };
 export default MovieListAPI;

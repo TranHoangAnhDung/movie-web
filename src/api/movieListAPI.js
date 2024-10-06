@@ -1,4 +1,6 @@
 import * as api from "./api";
+import * as SearchApi from "./searchAPI";
+
 const MovieListAPI = {
   getPopularMovies: () => {
     return api.get("/popular?language=vi&page=1");
@@ -18,7 +20,7 @@ const MovieListAPI = {
     return api.get(`/${movie_id}/credits`, { language: "en-US" });
   },
   getMovieSearch: (keyword) => {
-    return api.get(`/search/movie`, {
+    return SearchApi.getSearchList("/search/movie", {
       params: {
         query: keyword, // Truyền từ khóa tìm kiếm
         page: 1,

@@ -13,7 +13,6 @@ function App() {
             const Page = route.component;
             return <Route path={route.url} key={index} element={<Page />} />;
           })}
-          <Route path="/search/keyword" element={<MovieSearch />} />
         </Routes>
       </div>
     </>

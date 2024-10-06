@@ -17,5 +17,11 @@ const MovieListAPI = {
   getCasts: (movie_id) => {
     return api.get(`/${movie_id}/credits`, { language: "en-US" });
   },
+  getRecommendations: (movie_id) => {
+    return api.get(`/${movie_id}/recommendations`, {
+      language: "en-US",
+      page: 1,
+    });
+  },
 };
 export default MovieListAPI;

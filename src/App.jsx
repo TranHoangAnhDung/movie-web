@@ -1,11 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import { setupRouter } from "./routes/setupRouter";
 import Navbar from "./components/navbar";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <>
-      <div className="bg-black pb-10">
+      <div className="bg-black relative">
         <Navbar />
         <Routes>
           {setupRouter.map((route, index) => {
@@ -13,6 +14,7 @@ function App() {
             return <Route path={route.url} key={index} element={<Page />} />;
           })}
         </Routes>
+      <Footer />
       </div>
     </>
   );

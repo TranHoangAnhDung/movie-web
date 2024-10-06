@@ -29,8 +29,12 @@ const MovieList = ({ title, data }) => {
       console.log(error);
     }
   };
+  //handle Click button detail
+  const handleClickBtnDetail = () => {
+    setModalIsOpen(false);
+  }
   return (
-    <div className="text-white p-10 mb-10">
+    <div className="text-white mb-10">
       {/* //Show movie */}
       <MovieCard handleTrailer={handleTrailer} data={data} title={title} />
       {/* //Pop up trailer */}
@@ -39,6 +43,7 @@ const MovieList = ({ title, data }) => {
         selectMovie={selectMovie}
         trailerKey={trailerKey}
         setModalIsOpen={setModalIsOpen}
+        handleClickBtnDetail={handleClickBtnDetail}
       />
     </div>
   );

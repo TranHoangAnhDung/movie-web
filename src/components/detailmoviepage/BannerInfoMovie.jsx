@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const BannerInfoMovie = ({ data, videos }) => {
   const bgImg = ` ${import.meta.env.VITE_IMG_URL}${data.backdrop_path}`;
@@ -31,9 +32,11 @@ const BannerInfoMovie = ({ data, videos }) => {
               {/* <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 transition-all font-bold place-self-start ">
                 Trailer <i className="fa fa-video"></i>
               </button> */}
-              <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer transition-all font-bold place-self-start ">
-                Xem phim <i className="fa fa-angle-right"></i>
-              </button>
+              <Link to={`/xemphim/${data.id}`}>
+                <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer transition-all font-bold place-self-start ">
+                  Xem phim <i className="fa fa-angle-right"></i>
+                </button>
+              </Link>
               {/* <button
                 title="Thêm vào danh sách yêu thích"
                 className="h-[50px] w-[50px] rounded-full bg-red-600 hover:bg-red-800 transition-all"
@@ -52,8 +55,24 @@ const BannerInfoMovie = ({ data, videos }) => {
         </div>
       </div>
       {/* information movie -> */}
-      <div className="mx-20 mt-10">
-        <p className="text-gray-500">{data.overview}</p>
+      <div className="mx-20 mt-10 flex flex-col md:flex-row gap-3 ">
+        <div className="text-white basis-1/3">
+          <div className="flex flex-row mb-2 gap-3">
+            <h4 className="font-bold">Original Title:</h4>
+            <p>{data.original_title}</p>
+          </div>
+          <div className="flex flex-row mb-2 gap-3">
+            <h4 className="font-bold">Status:</h4>
+            <p>{data.status}</p>
+          </div>
+          <div className="flex flex-row mb-2 gap-3">
+            <h4 className="font-bold">Original Title:</h4>
+            <p>{data.budget}$</p>
+          </div>
+        </div>
+        <div>
+          <p className="text-gray-500">{data.overview}</p>
+        </div>
       </div>
     </>
   );

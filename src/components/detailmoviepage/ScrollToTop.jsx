@@ -26,11 +26,11 @@ const ScrollTopTop = () => {
     <>
       <button
         id="myBtn"
-        class="fixed hidden bottom-2 right-2 rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md  hover:bg-red-700 active:shadow-none hover:cursor-pointer ml-2 z-50"
+        className="fixed hidden bottom-2 right-2 rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md  hover:bg-red-700 active:shadow-none hover:cursor-pointer ml-2 z-50"
         type="button"
         onClick={() => handleScrollToTop()}
       >
-        <i class="fa fa-angle-double-up"></i>
+        <i className="fa fa-angle-double-up"></i>
       </button>
     </>
   );

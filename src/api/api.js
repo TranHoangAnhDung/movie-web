@@ -10,10 +10,10 @@ const api = axios.create({
   },
 });
 
- export const get = async (path, options = {}) => {
+export const get = async (path, options = {}) => {
   const response = await api.get(path, options);
+  console.log('call search api');
   return response.data;
 };
 
 export default api;
-

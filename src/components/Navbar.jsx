@@ -16,17 +16,26 @@ const Navbar = () => {
   };
 
   return (
-    <div className="p-4 bg-black flex items-center justify-between flex-wrap ">
-      <div className="flex items-center space-x-4">
+    <div className="p-4 bg-black flex items-center justify-between shadow-lg ">
+      <div className="flex items-center space-x-6">
         <h1 className="text-[30px] uppercase font-bold text-red-700">Movie</h1>
         <nav className="flex items-center space-x-4">
-          <a href="/" className="text-white">
+          <a
+            href="/"
+            className="text-white font-semibold hover:text-red-600 transition duration-300"
+          >
             Home
           </a>
-          <a href="#" className="text-white">
+          <a
+            href="/About"
+            className="text-white font-semibold hover:text-red-600 transition duration-300"
+          >
             About
           </a>
-          <a href="#" className="text-white">
+          <a
+            href="/Contact"
+            className="text-white font-semibold hover:text-red-600 transition duration-300"
+          >
             Contact
           </a>
         </nav>
@@ -41,7 +50,7 @@ const Navbar = () => {
         />
         <button
           type="submit" // Đảm bảo button hoạt động như một submit
-          className="p-3 text-white bg-red-600 rounded-full"
+          className="p-2 text-white bg-red-600 rounded-full hover:bg-red-700 transition duration-300"
         >
           Search
         </button>

@@ -1,6 +1,6 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
-import YouTube from "react-youtube";
+import LazyLoad from "react-lazyload"; // Import LazyLoad
 import "react-multi-carousel/lib/styles.css";
 
 const MovieDetailInfo = ({ data, movie, casts }) => {
@@ -22,6 +22,7 @@ const MovieDetailInfo = ({ data, movie, casts }) => {
       items: 1,
     },
   };
+
   const responsive2 = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -40,6 +41,7 @@ const MovieDetailInfo = ({ data, movie, casts }) => {
       items: 1,
     },
   };
+
   return (
     <div className="mx-20 mt-10">
       <h2 className="uppercase text-3xl font-bold mb-4 text-white">
@@ -48,52 +50,41 @@ const MovieDetailInfo = ({ data, movie, casts }) => {
       <Carousel responsive={responsive} className="flex items-center space-x-4">
         {data.length > 0 &&
           data.map((item, index) => (
-            <div
-              key={index}
-              className=" relative group hover:cursor-pointer"
-              //   onClick={() => handleTrailer(item)}
-            >
-              <div className="w-full h-full">
+            <div key={index} className="relative group hover:cursor-pointer">
+              <LazyLoad height={200} offset={100}>
                 <iframe
                   src={`https://www.youtube.com/embed/${item.key}`}
                   height="100%"
-                  allowfullscreen
+                  allowFullScreen
+                  title={`Video ${index + 1}`} // Thêm title cho iframe
                 ></iframe>
-                {/* <div className="absolute bottom-4 left-2">
-                  <p className="uppercase text-md">{item.type}</p>
-                </div> */}
-              </div>
-            </div>
-          ))}
-      </Carousel>
-      <h2 className="uppercase text-3xl font-bold mb-4 text-white">
-        Featured Cast
-      </h2>
-      <Carousel responsive={responsive2} className="flex items-center space-x-4">
-        {casts.length > 0 &&
-          casts.map((item, index) => (
-            <div
-              key={index}
-              className=""
-              //   onClick={() => handleTrailer(item)}
-            >
-              <div className="w-full h-full flex flex-col">
-                <div className="basis-2/3">
-                  <img
-                    src={`${import.meta.env.VITE_IMG_URL}${item.profile_path}`}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="basis-1/3">
-                  <p className="uppercase text-md text-white">{item.name}</p>
-                </div>
-              </div>
+              </LazyLoad>
             </div>
           ))}
       </Carousel>
 
-      <div></div>
+      <h2 className="uppercase text-3xl font-bold mb-4 text-white mt-8">
+        Featured Cast
+      </h2>
+      <Carousel
+        responsive={responsive2}
+        className="flex items-center space-x-4"
+      >
+        {casts.length > 0 &&
+          casts.map((item, index) => (
+            <div key={index} className="flex flex-col items-center">
+              {/* chỉnh lại css cho casts để tối ưu hóa loading */}
+              <div className="relative w-40 h-40 overflow-hidden rounded-full border-4 border-yellow-500 shadow-lg">
+                <img
+                  src={`${import.meta.env.VITE_IMG_URL}${item.profile_path}`}
+                  alt={item.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="uppercase text-md text-white mt-2">{item.name}</p>
+            </div>
+          ))}
+      </Carousel>
     </div>
   );
 };

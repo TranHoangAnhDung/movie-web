@@ -4,7 +4,14 @@ import YouTube from "react-youtube";
 import { Link } from "react-router-dom";
 
 const MovieTrailerPopUp = (props) => {
-  const { trailerKey, modalIsOpen, selectMovie, setModalIsOpen } = props;
+  const {
+    trailerKey,
+    modalIsOpen,
+    selectMovie,
+    setModalIsOpen,
+    handleClickBtnDetail,
+  } = props;
+  console.log(selectMovie);
   const opts = {
     height: "390",
     width: "640",
@@ -50,7 +57,10 @@ const MovieTrailerPopUp = (props) => {
       </div>
       <div className="flex justify-end my-5">
         <Link to={`/${selectMovie.id}`}>
-          <button className="p-2 rounded-md text-white bg-red-600 hover:cursor-pointer hover:bg-red-700 text-xl transition-all duration-200">
+          <button
+            onClick={() => handleClickBtnDetail()}
+            className="p-2 rounded-md text-white bg-red-600 hover:cursor-pointer hover:bg-red-700 text-xl transition-all duration-200"
+          >
             Chi tiết <i className="fa fa-arrow-right"></i>
           </button>
         </Link>

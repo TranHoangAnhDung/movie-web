@@ -6,13 +6,13 @@ const BannerInfoMovie = ({ data, videos }) => {
     <>
       {/* banner movie -> */}
       <div
-        className="w-full min-h-[540px] text-white flex items-center justify-center bg-top bg-no-repeat bg-cover relative p-10"
+        className="w-full min-h-[540px] text-white flex items-center justify-center bg-top bg-no-repeat bg-cover relative p-10 "
         style={{
           backgroundImage: `url(${bgImg})`,
         }}
       >
         <div className="absolute w-full h-full top-0 left-0 bg-black opacity-80" />
-        <div className="flex justify-between w-[80%] z-20 items-center">
+        <div className="flex flex-col justify-between w-[80%] z-20 items-center gap-5 md:flex-row">
           <div className=" flex flex-col gap-4 basis-3/4">
             <h1 className="font-mono text-5xl text-wrap">
               {data.original_title || data.name}
@@ -28,10 +28,10 @@ const BannerInfoMovie = ({ data, videos }) => {
               Rating: {Number(data.vote_average).toFixed(1)}/10
             </p>
             <div className="flex gap-3">
-              <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 transition-all font-bold place-self-start ">
+              {/* <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 transition-all font-bold place-self-start ">
                 Trailer <i className="fa fa-video"></i>
-              </button>
-              <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 transition-all font-bold place-self-start ">
+              </button> */}
+              <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer transition-all font-bold place-self-start ">
                 Xem phim <i className="fa fa-angle-right"></i>
               </button>
               {/* <button

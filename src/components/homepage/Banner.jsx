@@ -6,7 +6,7 @@ import Iconplay from "../../assets/play-button.png";
 
 const Banner = () => {
   return (
-    <div className="w-full min-h-[700px] bg-center bg-banner bg-no-repeat bg-cover relative">
+    <div className="w-full min-h-[500px] bg-center bg-banner bg-no-repeat bg-cover relative">
       <div className="absolute w-full h-full top-0 left-0 bg-black opacity-50" />
       <div className="w-full h-full flex items-center justify-center space-x-[30px] p-4 relative z-20">
         <div className="flex flex-col space-x-5 items-baseline w-[50%] ">
@@ -14,7 +14,10 @@ const Banner = () => {
             TV SHOW
           </p>
           <div className="flex flex-col space-y-4">
-            <h2 className="text-white text-[40px] font-bold font-mono"> LION KING</h2>
+            <h2 className="text-white text-[40px] font-bold font-mono">
+              {" "}
+              LION KING
+            </h2>
             <div className="flex items-center space-x-3">
               <img src={RatingIcon} alt="rating" className="w-8 h-8" />
               <img src={RatingIcon} alt="rating" className="w-8 h-8" />

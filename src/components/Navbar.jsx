@@ -46,11 +46,11 @@ const Navbar = () => {
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-4 text-black rounded-full w-60"
+          className="p-4 text-black rounded-full w-60 h-8"
         />
         <button
           type="submit" // Đảm bảo button hoạt động như một submit
-          className="p-2 text-white bg-red-600 rounded-full hover:bg-red-700 transition duration-300"
+          className="w-16 h-8 p-2 text-white bg-red-600 rounded-full hover:bg-red-700 transition duration-300 flex items-center"
         >
           Search
         </button>

@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import MovieListAPI from "../api/movieListAPI";
 import BannerInfoMovie from "../components/detailmoviepage/BannerInfoMovie";
 import MovieDetailInfo from "../components/detailmoviepage/MovieDetailInfo";
-import ScrollToTop from "../components/detailmoviepage/ScrollToTop";
 import BackToPrePage from "../components/detailmoviepage/BackToPrePage";
 import Loading from "../components/loading/Loading";
 
@@ -47,7 +46,6 @@ const MovieDetail = () => {
   };
 
   return isLoading ? (
-<<<<<<< HEAD
     <div className="text-white flex items-center justify-center py-10">
       <Loading />
     </div>
@@ -61,15 +59,6 @@ const MovieDetail = () => {
         casts={casts}
         onVideoClick={onVideoClick} // Truyền hàm vào đây
       />
-      <ScrollToTop />
-=======
-    <div className="text-white flex items-center justify-center py-10 mb-40"><Loading /></div>
-  ) : (
-    <div className="">
-      <BannerInfoMovie data={movie} />
-      <MovieDetailInfo data={videos} movies={recommendMovie} casts={casts} />
-      
->>>>>>> c72557d4aa44798435c76e06f53fdfccf4167e73
       <BackToPrePage />
     </div>
   );

@@ -31,11 +31,7 @@ const ScrollTopTop = () => {
     <>
       <button
         id="myBtn"
-<<<<<<< HEAD
-        className="fixed hidden bottom-2 right-2 rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:bg-red-700 active:shadow-none hover:cursor-pointer ml-2 z-50"
-=======
         className="fixed bottom-2 right-2 rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md  hover:bg-red-700 active:shadow-none hover:cursor-pointer ml-2 z-50"
->>>>>>> c72557d4aa44798435c76e06f53fdfccf4167e73
         type="button"
         onClick={handleScrollToTop}
         style={{ display: "none" }}

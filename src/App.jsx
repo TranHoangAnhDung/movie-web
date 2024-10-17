@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import MovieSearch from "./components/homepage/MovieSearch";
 import About from "./components/homepage/About";
 import Contact from "./components/homepage/Contact";
+import ScrollTopTop from "./components/detailmoviepage/ScrollToTop";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             return <Route path={route.url} key={index} element={<Page />} />;
           })}
         </Routes>
+        <ScrollTopTop />
       <Footer />
       </div>
     </>

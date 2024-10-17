@@ -47,6 +47,7 @@ const MovieDetail = () => {
   };
 
   return isLoading ? (
+<<<<<<< HEAD
     <div className="text-white flex items-center justify-center py-10">
       <Loading />
     </div>
@@ -61,6 +62,14 @@ const MovieDetail = () => {
         onVideoClick={onVideoClick} // Truyền hàm vào đây
       />
       <ScrollToTop />
+=======
+    <div className="text-white flex items-center justify-center py-10 mb-40"><Loading /></div>
+  ) : (
+    <div className="">
+      <BannerInfoMovie data={movie} />
+      <MovieDetailInfo data={videos} movies={recommendMovie} casts={casts} />
+      
+>>>>>>> c72557d4aa44798435c76e06f53fdfccf4167e73
       <BackToPrePage />
     </div>
   );

@@ -46,7 +46,7 @@ const MovieDetail = () => {
   };
 
   return isLoading ? (
-    <div className="text-white flex items-center justify-center py-10">
+    <div className="text-white flex items-center justify-center py-10 mb-40">
       <Loading />
     </div>
   ) : (

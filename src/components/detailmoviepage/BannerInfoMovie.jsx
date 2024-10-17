@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const BannerInfoMovie = ({ data }) => {
+const BannerInfoMovie = ({ data, videos = [] }) => {
+  // Khởi tạo mặc định cho videos
+  const [showVideo, setShowVideo] = useState(false);
   const bgImg = ` ${import.meta.env.VITE_IMG_URL}${data.backdrop_path}`;
+
+  const handleVideoClick = () => {
+    setShowVideo(true);
+  };
+
   return (
     <>
       {/* banner movie -> */}
       <div
-      
         className="w-full min-h-[540px] text-white flex items-center justify-center bg-top bg-no-repeat bg-cover relative p-10 "
         style={{
           backgroundImage: `url(${bgImg})`,
@@ -30,17 +36,12 @@ const BannerInfoMovie = ({ data }) => {
               Rating: {Number(data.vote_average).toFixed(1)}/10
             </p>
             <div className="flex gap-3">
-              <Link to={`/xemphim/${data.id}`}>
-                <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer transition-all font-bold place-self-start ">
-                  Xem phim <i className="fa fa-angle-right"></i>
-                </button>
-              </Link>
-              {/* <button
-                title="Thêm vào danh sách yêu thích"
-                className="h-[50px] w-[50px] rounded-full bg-red-600 hover:bg-red-800 transition-all"
+              <button
+                className="p-3 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer transition-all font-bold place-self-start"
+                onClick={handleVideoClick}
               >
-                <i className="fa fa-heart"></i>
-              </button> */}
+                Xem phim <i className="fa fa-angle-right"></i>
+              </button>
             </div>
           </div>
           <div className="basis-1/4 ">
@@ -52,6 +53,28 @@ const BannerInfoMovie = ({ data }) => {
           </div>
         </div>
       </div>
+
+      {/* Show video if clicked */}
+      {showVideo && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75 z-50">
+          <div className="relative w-[80%] h-[80%]">
+            <button
+              className="absolute top-0 right-0 m-4 text-white text-2xl"
+              onClick={() => setShowVideo(false)}
+            >
+              &times;
+            </button>
+            {videos.length > 0 && (
+              <iframe
+                src={`https://www.youtube.com/embed/${videos[0].key}`}
+                allowFullScreen
+                className="w-full h-full"
+              ></iframe>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* information movie -> */}
       <div className="mx-20 mt-10 flex flex-col md:flex-row gap-3 ">
         <div className="text-white basis-1/3">
@@ -64,7 +87,7 @@ const BannerInfoMovie = ({ data }) => {
             <p>{data.status}</p>
           </div>
           <div className="flex flex-row mb-2 gap-3">
-            <h4 className="font-bold">Original Title:</h4>
+            <h4 className="font-bold">Budget:</h4>
             <p>{data.budget}$</p>
           </div>
         </div>

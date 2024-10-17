@@ -1,23 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const ScrollTopTop = () => {
-  window.onscroll = function () {
-    scrollFunction();
-  };
-  // khai báo hàm scrollFunction
-  function scrollFunction() {
-    // Kiểm tra vị trí hiện tại của con trỏ so với nội dung trang
-    if (
-      document.body.scrollTop > 20 ||
-      document.documentElement.scrollTop > 20
-    ) {
-      //nếu lớn hơn 20px thì hiện button
-      document.getElementById("myBtn").style.display = "inline-block";
-    } else {
-      //nếu nhỏ hơn 20px thì ẩn button
-      document.getElementById("myBtn").style.display = "none";
-    }
-  }
+  useEffect(() => {
+    const scrollFunction = () => {
+      const button = document.getElementById("myBtn");
+      if (!button) return;
+
+      if (
+        document.body.scrollTop > 20 ||
+        document.documentElement.scrollTop > 20
+      ) {
+        button.style.display = "inline-block";
+      } else {
+        button.style.display = "none";
+      }
+    };
+
+    window.onscroll = scrollFunction;
+
+    return () => {
+      window.onscroll = null;
+    };
+  }, []);
+
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -26,9 +31,10 @@ const ScrollTopTop = () => {
     <>
       <button
         id="myBtn"
-        className="fixed hidden bottom-2 right-2 rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md  hover:bg-red-700 active:shadow-none hover:cursor-pointer ml-2 z-50"
+        className="fixed hidden bottom-2 right-2 rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:bg-red-700 active:shadow-none hover:cursor-pointer ml-2 z-50"
         type="button"
-        onClick={() => handleScrollToTop()}
+        onClick={handleScrollToTop}
+        style={{ display: "none" }}
       >
         <i className="fa fa-angle-double-up"></i>
       </button>

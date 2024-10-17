@@ -13,12 +13,11 @@ const MovieDetail = () => {
   const [casts, setCasts] = useState([]);
   const [recommendMovie, setRecommendMovie] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  // get param from url
   const param = useParams();
   const { movieID } = param;
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    // call API get movie detail
     const fetchDataMovie = async () => {
       try {
         setIsLoading(true);
@@ -33,7 +32,6 @@ const MovieDetail = () => {
         setVideos(dataVideos.results);
         setCasts(dataCasts.cast);
         setRecommendMovie(dataRecommend.results);
-        console.log(casts);
       } catch (error) {
         console.log(error.message);
       } finally {
@@ -42,12 +40,26 @@ const MovieDetail = () => {
     };
     fetchDataMovie();
   }, [movieID]);
+
+  // Hàm xử lý click vào video
+  const onVideoClick = (key) => {
+    window.open(`https://www.youtube.com/watch?v=${key}`, "_blank");
+  };
+
   return isLoading ? (
-    <div className="text-white flex items-center justify-center py-10"><Loading /></div>
+    <div className="text-white flex items-center justify-center py-10">
+      <Loading />
+    </div>
   ) : (
     <div className="">
-      <BannerInfoMovie data={movie} />
-      <MovieDetailInfo data={videos} movies={recommendMovie} casts={casts} />
+      {/* Cập nhật dòng này */}
+      <BannerInfoMovie data={movie} videos={videos} />
+      <MovieDetailInfo
+        data={videos}
+        movies={recommendMovie}
+        casts={casts}
+        onVideoClick={onVideoClick} // Truyền hàm vào đây
+      />
       <ScrollToTop />
       <BackToPrePage />
     </div>

@@ -64,7 +64,7 @@ const BannerInfoMovie = ({ data }) => {
             <p>{data.status}</p>
           </div>
           <div className="flex flex-row mb-2 gap-3">
-            <h4 className="font-bold">Original Title:</h4>
+            <h4 className="font-bold">Budget:</h4>
             <p>{data.budget}$</p>
           </div>
         </div>

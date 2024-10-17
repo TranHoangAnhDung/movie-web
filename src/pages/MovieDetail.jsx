@@ -43,12 +43,12 @@ const MovieDetail = () => {
     fetchDataMovie();
   }, [movieID]);
   return isLoading ? (
-    <div className="text-white flex items-center justify-center py-10"><Loading /></div>
+    <div className="text-white flex items-center justify-center py-10 mb-40"><Loading /></div>
   ) : (
     <div className="">
       <BannerInfoMovie data={movie} />
       <MovieDetailInfo data={videos} movies={recommendMovie} casts={casts} />
-      <ScrollToTop />
+      
       <BackToPrePage />
     </div>
   );

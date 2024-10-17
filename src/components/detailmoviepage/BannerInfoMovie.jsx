@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const BannerInfoMovie = ({ data, videos }) => {
+const BannerInfoMovie = ({ data }) => {
   const bgImg = ` ${import.meta.env.VITE_IMG_URL}${data.backdrop_path}`;
   return (
     <>
       {/* banner movie -> */}
       <div
+      
         className="w-full min-h-[540px] text-white flex items-center justify-center bg-top bg-no-repeat bg-cover relative p-10 "
         style={{
           backgroundImage: `url(${bgImg})`,
@@ -29,9 +30,6 @@ const BannerInfoMovie = ({ data, videos }) => {
               Rating: {Number(data.vote_average).toFixed(1)}/10
             </p>
             <div className="flex gap-3">
-              {/* <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 transition-all font-bold place-self-start ">
-                Trailer <i className="fa fa-video"></i>
-              </button> */}
               <Link to={`/xemphim/${data.id}`}>
                 <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 cursor-pointer transition-all font-bold place-self-start ">
                   Xem phim <i className="fa fa-angle-right"></i>

@@ -13,15 +13,13 @@ import Contact from "./components/homepage/Contact";
 function App() {
   return (
     <>
-      <div className="bg-black relative">
+      <div className="bg-black relative pt-28">
         <Navbar />
         <Routes>
           {setupRouter.map((route, index) => {
             const Page = route.component;
             return <Route path={route.url} key={index} element={<Page />} />;
           })}
-          <Route path="/About" element={<About />} />
-          <Route path="/Contact" element={<Contact />} />
         </Routes>
       <Footer />
       </div>

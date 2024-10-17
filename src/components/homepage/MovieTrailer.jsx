@@ -11,7 +11,6 @@ const MovieTrailerPopUp = (props) => {
     setModalIsOpen,
     handleClickBtnDetail,
   } = props;
-  console.log(selectMovie);
   const opts = {
     height: "390",
     width: "640",

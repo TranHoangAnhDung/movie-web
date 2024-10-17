@@ -160,6 +160,7 @@ const Navbar = () => {
           </AnimatePresence>
         )}
       </div>
+
       {/* Search mobile */}
       <form onSubmit={handleSearch}>
         <div className="flex items-center justify-center w-full mb-8 md:hidden">
@@ -195,6 +196,7 @@ const Navbar = () => {
             </button>
           </div>
         </div>
+
       </form>
     </nav>
   );

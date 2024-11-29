@@ -11,6 +11,7 @@ import Contact from "./components/homepage/Contact";
 import ScrollTopTop from "./components/detailmoviepage/ScrollToTop";
 
 
+
 function App() {
   return (
     <>

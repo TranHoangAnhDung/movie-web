@@ -1,88 +1,40 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cors from "cors"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import cors from "cors"
+import nodemailer from 'nodemailer'
 
-import AccountModel from "./model/Account.js";
+import connectDB from "./config/mongodb.js"
+import connectCloudinary from "./config/cloudinary.js";
 
+import accountRoute from "./routes/accountRoute.js"
+import movieRoute from "./routes/movieRoute.js"
+import adminRoute from "./routes/adminRoute.js"
+import imageRoute from "./routes/imageRoute.js"
+
+// App Config
 dotenv.config();
-
-mongoose.connect(
-  "mongodb+srv://kennySang:dragon9076@cluster0.r6njk.mongodb.net/MOVIE_WEB"
-);
-
+connectDB()
+// connectCloudinary()
 const app = express();
+
+// middleware
+// Dùng CORS để FE có thể gửi api đến BE thông qua method
 app.use(cors({
   origin: "http://localhost:5173",
   methods: "GET, POST, PUT, DELETE",
-  allowedHeaders: "Content-Type, Authorization"
+  allowedHeaders: "Content-Type, Authorization",
+  credentials: true
 }))
 app.use(express.json());
 
-app.post("/api/auth/register", async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password)
-      return res.status(401).json("Require name, email, password");
-
-    const existedAccount = await AccountModel.findOne({ email });
-    if (existedAccount) return res.status(400).json("Email already exists");
-
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(password, salt);
-
-    const newAccount = await AccountModel.create({
-      name,
-      email,
-      password: hash,
-    });
-
-    res.status(201).send({
-      message: "Register successfully",
-      newAccount,
-      success: true,
-    });
-
-  } catch (error) {
-    res.status(403).send({
-      message: error.message,
-      data: null,
-      success: false,
-    });
-  }
-});
-
-app.post("/api/auth/login", async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-
-    const account = await AccountModel.findOne({ email });
-    if (!account) return res.status(404).json("Invalid Email or Password");
-
-    // So sánh mật khẩu người dùng nhập với mật khẩu đã hash trong cơ sở dữ liệu
-    const isMatch = bcrypt.compare(password, account.password);
-    if (!isMatch) return res.status(400).json("Invalid Email or Password");
-
-    const token = jwt.sign({ id: account._id }, process.env.SECRET_KEY, {expiresIn: "1h"});
-
-    res.status(201).send({
-      message: "Login successfully",
-      token, 
-      name: account.name,
-      success: true,
-    });
-
-  } catch (error) {
-    res.status(403).send({
-      message: error.message,
-      data: null,
-      success: false,
-    });
-  }
-});
+// api endpoints
+app.use("/api/auth", accountRoute)
+app.use("/admin", adminRoute)
+app.use("/api/movie", movieRoute)
+app.use("/image", imageRoute)
 
 app.listen(8080, () => {
   console.log("Server is running");

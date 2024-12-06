@@ -5,6 +5,7 @@ import HomePage from "../pages/HomePage";
 import Login from "../pages/Login";
 import Movie from "../pages/Movie";
 import MovieDetail from "../pages/MovieDetail";
+import ResetPassword from "../pages/ResetPassword";
 
 const setupRouter = [
   { url: "/", component: HomePage },
@@ -13,6 +14,7 @@ const setupRouter = [
   { url: "/search/:keyword", component: MovieSearch },
   { url: "/About", component: About },
   { url: "/Contact", component: Contact },
-  { url: "/Login", component: Login}
+  { url: "/Login", component: Login},
+  { url: "/reset-password/:token", component: ResetPassword}
 ];
 export { setupRouter };

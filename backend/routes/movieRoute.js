@@ -1,7 +1,6 @@
 import express from "express";
 
 import {
-  addCelebToMovie,
   addMovieScheduleToScreen,
   bookTicket,
   createMovie,
@@ -13,6 +12,7 @@ import {
   getScreensByMoviesSchedule,
   getUserBookings,
   getUserBookingsId,
+  removeMovie,
 } from "../controllers/movieController.js";
 
 import authAdminToken from "../middleware/checkAdminToken.js";
@@ -22,7 +22,7 @@ const Router = express.Router();
 
 { /* ADMIN ACCESS */ }
 Router.route("/createmovie").post(authAdminToken, createMovie);
-Router.route("/addcelebtomovie").post(authAdminToken, addCelebToMovie);
+Router.route("/remove").post(authAdminToken, removeMovie);
 Router.route("/createscreen").post(authAdminToken, createScreen);
 Router.route("/addmoviescheduletoscreen").post(
   authAdminToken,

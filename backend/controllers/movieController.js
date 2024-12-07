@@ -1,5 +1,3 @@
-import { v2 as cloudinary } from "cloudinary"
-
 import MovieModel from "../model/Movie.js"
 import ScreenModel from "../model/Screen.js"
 import AccountModel from "../model/Account.js"
@@ -8,38 +6,6 @@ import BookingModel from "../model/Booking.js"
             {/* ADMIN ACCESS */}
 export const createMovie = async (req, res, next) => {
     try {
-        // const {title,description,genre,releaseDate,duration,language,poster } = req.body
-
-        // const image1 = req.file.image1[0]
-        // const image2 = req.file.image2[0]
-        // const image3 = req.file.image3[0]
-        // const image4 = req.file.image4[0]
-
-        // const images = [image1, image2,image3,image4].filter((item) =>item !== undefined )
-
-        // let imagesUrl = await Promise.all(
-        //     images.map(async (item) => {
-        //         let result = await cloudinary.uploader.upload(item.path, {resource_type:"image"})
-        //         return result.secure_url
-        //     })
-        // )
-        // console.log(title,description,genre,releaseDate,duration,language,poster);
-        // console.log(imagesUrl);
-
-        // const movieData = {
-        //     title,
-        //     description,
-        //     genre,
-        //     releaseDate,
-        //     duration: Number(duration),
-        //     language,
-        //     poster: imagesUrl
-        // }
-
-        // const movie = new MovieModel(movieData)
-        // await movie.save()
-
-        // res.json({success: true, message:"Product added"})
 
         const { title, description, portraitImgUrl, landscapeImgUrl, rating, genre, duration } = req.body
 
@@ -56,38 +22,53 @@ export const createMovie = async (req, res, next) => {
     }
 }
 
-export const addCelebToMovie = async (req, res, next) => {
+export const removeMovie = async (req, res, next) => {
     try {
-        const { movieId, celebType, celebName, celebRole, celebImage } = req.body;
-        const movie = await MovieModel.findById(movieId);
-        if (!movie) {
-            return res.status(404).json({
-                ok: false,
-                message: "Movie not found"
-            });
-        }
-        const newCeleb = {
-            celebType,
-            celebName,
-            celebRole,
-            celebImage
-        };
-        if (celebType === "cast") {
-            movie.cast.push(newCeleb);
-        } else {
-            movie.crew.push(newCeleb);
-        }
-        await movie.save();
+
+        await MovieModel.findByIdAndDelete(req.body.id)
 
         res.status(201).json({
             ok: true,
-            message: "Celeb added successfully"
+            message: "Movie removed"
         });
-    }
-    catch (error) {
+
+    } catch (error) {
         res.json({success: false, message: error.message})
     }
-}
+} 
+
+// export const addCelebToMovie = async (req, res, next) => {
+//     try {
+//         const { movieId, celebType, celebName, celebRole, celebImage } = req.body;
+//         const movie = await MovieModel.findById(movieId);
+//         if (!movie) {
+//             return res.status(404).json({
+//                 ok: false,
+//                 message: "Movie not found"
+//             });
+//         }
+//         const newCeleb = {
+//             celebType,
+//             celebName,
+//             celebRole,
+//             celebImage
+//         };
+//         if (celebType === "cast") {
+//             movie.cast.push(newCeleb);
+//         } else {
+//             movie.crew.push(newCeleb);
+//         }
+//         await movie.save();
+
+//         res.status(201).json({
+//             ok: true,
+//             message: "Celeb added successfully"
+//         });
+//     }
+//     catch (error) {
+//         res.json({success: false, message: error.message})
+//     }
+// }
 
 export const createScreen = async (req,res,next) => {
     try {
@@ -262,7 +243,7 @@ export const getMoviesId = async (req,res,next) => {
     }
 }
 
-export const getScreensByCity = async (req,res,next) => {
+export const getScreensByCity = async (req,res,next) => { //:city
     const city = req.params.city.toLowerCase();
 
     try {
@@ -428,13 +409,7 @@ export const getUserBookingsId = async (req,res,next) => { // /:id
 //     }
 // }
 
-// export const removeMovie = async (req, res, next) => {
-//     try {
 
-//     } catch (error) {
-        
-//     }
-// }
 
 // export const singleMovie = async (req, res, next) => {
 //     try {

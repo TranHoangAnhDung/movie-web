@@ -37,38 +37,55 @@ export const removeMovie = async (req, res, next) => {
     }
 } 
 
-// export const addCelebToMovie = async (req, res, next) => {
-//     try {
-//         const { movieId, celebType, celebName, celebRole, celebImage } = req.body;
-//         const movie = await MovieModel.findById(movieId);
-//         if (!movie) {
-//             return res.status(404).json({
-//                 ok: false,
-//                 message: "Movie not found"
-//             });
-//         }
-//         const newCeleb = {
-//             celebType,
-//             celebName,
-//             celebRole,
-//             celebImage
-//         };
-//         if (celebType === "cast") {
-//             movie.cast.push(newCeleb);
-//         } else {
-//             movie.crew.push(newCeleb);
-//         }
-//         await movie.save();
+export const updateMovie = async (req,res,next) => {
+    try {
+        const { id } = req.params;
+        const updatedData = req.body;
+    
+        const updatedMovie = await MovieModel.findByIdAndUpdate(id, updatedData, {
+          new: true,
+        });
+    
+        if (!updatedMovie) {
+          return res.status(404).json({ ok: false, message: "Movie not found" });
+        }
+    
+        res.status(200).json({ ok: true, message: "Movie updated successfully", data: updatedMovie });
+      } catch (error) {
+        res.json({ ok: false, message: error.message });
+      }
+}
 
-//         res.status(201).json({
-//             ok: true,
-//             message: "Celeb added successfully"
-//         });
-//     }
-//     catch (error) {
-//         res.json({success: false, message: error.message})
-//     }
-// }
+export const addCelebToMovie = async (req, res, next) => {
+    try {
+        const { movieId, celebName, celebRole, celebImage } = req.body;
+        const movie = await MovieModel.findById(movieId);
+        
+        if (!movie) {
+            return res.status(404).json({
+                ok: false,
+                message: "Movie not found"
+            });
+        }
+        const newCeleb = {
+            celebName,
+            celebRole,
+            celebImage
+        };
+        
+        movie.cast.push(newCeleb);
+        
+        await movie.save();
+
+        res.status(201).json({
+            ok: true,
+            message: "Celeb added successfully"
+        });
+    }
+    catch (error) {
+        res.json({success: false, message: error.message})
+    }
+}
 
 export const createScreen = async (req,res,next) => {
     try {
@@ -271,8 +288,6 @@ export const getScreensByMoviesSchedule = async (req,res,next) => { // /:city/:d
 
         // Retrieve screens for the specified city
         const screens = await ScreenModel.find({ city });
-
-        // Check if screens were found
         if (!screens || screens.length === 0) {
             return res.status(404).json('No screens found in the specified city');
         }
@@ -401,20 +416,4 @@ export const getUserBookingsId = async (req,res,next) => { // /:id
         res.json({success: false, message: error.message})
     }
 }
-// export const listMovie = async (req, res, next) => {
-//     try {
 
-//     } catch (error) {
-        
-//     }
-// }
-
-
-
-// export const singleMovie = async (req, res, next) => {
-//     try {
-
-//     } catch (error) {
-        
-//     }
-// }

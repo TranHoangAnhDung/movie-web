@@ -23,8 +23,8 @@ const Navbar = ({ userName, setUserName }) => {
   };
 
   const toggleDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible)
-  }
+    setIsDropdownVisible(!isDropdownVisible);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -116,13 +116,22 @@ const Navbar = ({ userName, setUserName }) => {
         <div className="hidden md:block">
           {userName ? (
             <div className="relative">
-              <button onClick={toggleDropdown} className="rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-red-700 focus:shadow-none active:bg-red-700 hover:bg-red-700 active:shadow-none ml-4">
+              <button
+                onClick={toggleDropdown}
+                className="rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-red-700 focus:shadow-none active:bg-red-700 hover:bg-red-700 active:shadow-none ml-4"
+              >
                 Xin Chào, {userName}
               </button>
 
               {/* Dropdown logout */}
               {isDropdownVisible && (
                 <div className="absolute mt-2 ml-11 w-30 bg-white text-black rounded-md shadow-md">
+                  <Link
+                    to={"/profile"}
+                    className="block px-4 py-2 cursor-pointer hover:bg-gray-200"
+                  >
+                    My Profile
+                  </Link>
                   <p
                     className="px-4 py-2 cursor-pointer hover:bg-gray-200"
                     onClick={handleLogout}

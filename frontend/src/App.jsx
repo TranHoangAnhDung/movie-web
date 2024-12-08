@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { setupRouter } from "./routes/setupRouter";
 
-
 import Footer from "./components/Footer";
 
 import Navbar from "./components/Navbar";

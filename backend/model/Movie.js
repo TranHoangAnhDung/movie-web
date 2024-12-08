@@ -10,15 +10,6 @@ const movieSchema = new mongoose.Schema({
   duration: Number, // Duration in minutes
   cast: [
     {
-      celebType: String,
-      celebName: String,
-      celebRole: String,
-      celebImage: String,
-    },
-  ],
-  crew: [
-    {
-      celebType: String,
       celebName: String,
       celebRole: String,
       celebImage: String,

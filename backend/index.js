@@ -22,9 +22,16 @@ const app = express();
 
 // middleware
 // Dùng CORS để FE có thể gửi api đến BE thông qua method
+const allowedOrigins = process.env.FRONTEND_URL.split(",")
+
 app.use(cors({
-  origin: "http://localhost:5173",
-  origin: "http://localhost:5174",
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
   methods: "GET, POST, PUT, DELETE",
   allowedHeaders: "Content-Type, Authorization",
   credentials: true

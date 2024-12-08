@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import RatingIcon from "../../assets/rating.png";
 import RatingHalff from "../../assets/rating-half.png";
 import Img from "../../assets/thelionking.jpeg";
@@ -47,9 +49,9 @@ const Banner = () => {
               <button className="p-3 text-white bg-black font-bold text-sm">
                 Chi tiết
               </button>
-              <button className="p-3 text-white bg-red-500 font-bold text-sm">
-                Xem phim
-              </button>
+              <Link to={"/buytickets"} className="p-3 text-white bg-red-500 font-bold text-sm">
+                Book Ticket
+              </Link>
             </div>
           </div>
         </div>

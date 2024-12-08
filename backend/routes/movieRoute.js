@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  addCelebToMovie,
   addMovieScheduleToScreen,
   bookTicket,
   createMovie,
@@ -13,6 +14,7 @@ import {
   getUserBookings,
   getUserBookingsId,
   removeMovie,
+  updateMovie,
 } from "../controllers/movieController.js";
 
 import authAdminToken from "../middleware/checkAdminToken.js";
@@ -28,6 +30,9 @@ Router.route("/addmoviescheduletoscreen").post(
   authAdminToken,
   addMovieScheduleToScreen
 );
+Router.route("/addceleb").post(authAdminToken, addCelebToMovie)
+
+Router.route("/update/:id").put(authAdminToken, updateMovie)
 
 { /* USER ACCESS */ }
 Router.route("/bookticket").post(authToken, bookTicket);

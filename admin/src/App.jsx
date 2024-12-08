@@ -13,7 +13,7 @@ import CreateMoviePage from "./pages/CreateMovie"
 import CreateScreenPage from "./pages/CreateScreen";
 import CreateSchedule from "./pages/CreateSchedule";
 import ListMovies from "./pages/ListMovies";
-// import AddCeleb from "./pages/AddCeleb"
+import CreateCeleb from "./pages/CreateCeleb";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -44,8 +44,8 @@ function App() {
                 <Route path="/createmovie" element={<CreateMoviePage />}/>
                 <Route path="/schedule" element={<CreateSchedule />} />
                 <Route path="/screen" element={<CreateScreenPage />} />
+                <Route path="/celeb" element={<CreateCeleb />}/>
                 <Route path="/listmovies" element={<ListMovies />}/>
-                {/* <Route path="/addceleb" element={<AddCeleb />}/> */}
 
               </Routes>
 

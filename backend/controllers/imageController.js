@@ -18,6 +18,7 @@ const uploadImage = async (req, res, next) => {
 
     sharp(file.buffer)
         .resize({ width: 800 })
+        .jpeg({ quality: 80 })
         .toBuffer(async (error, data, info) => {
             if (error) {
                 console.error('Image processing error:', error);

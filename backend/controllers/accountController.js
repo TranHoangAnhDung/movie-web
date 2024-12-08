@@ -137,3 +137,14 @@ export const resetPassword = async (req, res, next) => {
     res.status(400).json("Invalid or expired token.")
   }
 }
+
+export const getUser = async (req,res,next) => {
+  const user = await AccountModel.findOne({ _id: req.userId });
+
+    if (!user) {
+        return res.status(400).json({ok: false, message: 'Invalid credentials'});
+    }
+    else{
+        return res.status(200).json({ok: true, message: 'User found', data: user});
+    }
+}

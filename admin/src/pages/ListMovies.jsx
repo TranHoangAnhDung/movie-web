@@ -126,10 +126,81 @@ const ListMovies = () => {
 
   return (
     <>
-      <p className="mb-2">All Movies List</p>
-      <div className="flex flex-col gap-2">
-        {/* ---- List Table Title ------ */}
-        <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm ">
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                Image
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Title
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Rating
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Genre
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Duration
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Action
+              </th>
+            </tr>
+          </thead>
+
+          {/* ---- Movie List ------ */}
+          <tbody>
+            {list.map((item, index) => {
+              return (
+                <tr
+                  key={index}
+                  className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
+                >
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <img className="w-24" src={item.portraitImgUrl} alt="" />
+                  </th>
+                  <td className="px-6 py-4">{item.title}</td>
+                  <td className="px-6 py-4">{item.rating}</td>
+
+                  <td className="px-6 py-4">
+                    {item.genre.map((genre, genreIndex) => (
+                      <p key={genreIndex} className=" flex flex-col gap-1 ">
+                        {genre}
+                      </p>
+                    ))}
+                  </td>
+
+                  <td className="px-6 py-4">{item.duration}</td>
+
+                  <td className="px-6 py-[50%] flex flex-row gap-7">
+                    <img
+                      src={image}
+                      className="cursor-pointer text-white hover:text-blue-700 w-5"
+                      onClick={() => openModal(item)}
+                    />
+                    <span
+                      className="cursor-pointer text-red-500 hover:text-red-700"
+                      onClick={() => removeMovie(item._id)}
+                    >
+                      X
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* <div className="flex flex-col gap-2">  */}
+      {/* ---- List Table Title ------ */}
+      {/* <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm ">
           <b>Image</b>
           <b>Title</b>
           <b>Rating</b>
@@ -139,7 +210,7 @@ const ListMovies = () => {
         </div>
 
         {/* ---- Movie List ------ */}
-        {list.map((item, index) => {
+      {/* {list.map((item, index) => {
           return (
             <div
               key={index}
@@ -175,7 +246,7 @@ const ListMovies = () => {
             </div>
           );
         })}
-      </div>
+      </div> */}
 
       {/* Modal for Editing Movie */}
       {modalIsOpen && (

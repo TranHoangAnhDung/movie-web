@@ -4,9 +4,14 @@ import image from "../assets/movie-icon.jpg";
 
 const Sidebar = () => {
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
+  const [isListsOpen, setIsListsOpen] = useState(false);
 
   const toggleAddMenu = () => {
     setIsAddMenuOpen(!isAddMenuOpen);
+  };
+
+  const toggleLists = () => {
+    setIsListsOpen(!isListsOpen);
   };
 
   return (
@@ -32,7 +37,7 @@ const Sidebar = () => {
                 <img className="w-5 h-5" src={image} alt="" />
                 <p className="hidden md:block">Add Movie</p>
               </NavLink>
-              
+
               <NavLink
                 to="/screen"
                 className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
@@ -61,13 +66,52 @@ const Sidebar = () => {
         </div>
 
         {/* List All Section */}
-        <NavLink
+        <div className="flex flex-col gap-3">
+          <button
+            onClick={toggleLists}
+            className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
+          >
+            <img className="w-5 h-5" src={image} alt="" />
+            <p className="hidden md:block">Lists</p>
+          </button>
+
+          {/* Collapsible List Items */}
+          {isListsOpen && (
+            <div className="flex flex-col gap-3 ml-4">
+              <NavLink
+                to="/listmovies"
+                className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
+              >
+                <img className="w-5 h-5" src={image} alt="" />
+                <p className="hidden md:block">All Movies</p>
+              </NavLink>
+
+              <NavLink
+                to="/listscreens"
+                className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
+              >
+                <img className="w-5 h-5" src={image} alt="" />
+                <p className="hidden md:block">All Screens</p>
+              </NavLink>
+
+              <NavLink
+                to="/listschedules"
+                className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
+              >
+                <img className="w-5 h-5" src={image} alt="" />
+                <p className="hidden md:block">All Schedules</p>
+              </NavLink>
+
+            </div>
+          )}
+        </div>
+        {/* <NavLink
           to="/listmovies"
           className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
         >
           <img className="w-5 h-5" src={image} alt="" />
-          <p className="hidden md:block">List All</p>
-        </NavLink>
+          <p className="hidden md:block">Lists</p>
+        </NavLink> */}
       </div>
     </div>
   );

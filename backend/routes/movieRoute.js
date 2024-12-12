@@ -49,9 +49,4 @@ Router.route("/schedulebymovie/:screenid/:date/:movieid").get(
 Router.route("/getuserbookings").get(authToken, getUserBookings);
 Router.route("/getuserbookings/:id").get(authToken, getUserBookingsId);
 
-// Router.post("/add", upload.fields([{name:"image1", maxCount:1},{name:"image2", maxCount:1},{name:"image3", maxCount:1}, {name:"image4", maxCount:1}]), addMovie)
-// Router.post("/createmovie", createMovie)
-// Router.post("/single", singleMovie)
-// Router.get("/list", listMovie)
-
 export default Router;

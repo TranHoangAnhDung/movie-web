@@ -47,7 +47,7 @@ const Login = ({setUserName}) => {
         
         if (currentState === "Login") {
           // Khi login thành công, lưu token vào localStorage và điều hướng
-  
+          localStorage.setItem("token", response.data.token)
           localStorage.setItem("userName", response.data.name)
           setUserName(response.data.name)       // Lưu tên người dùng
           navigate("/")       // Điều hướng đến trang Home

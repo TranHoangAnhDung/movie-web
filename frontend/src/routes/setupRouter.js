@@ -12,7 +12,8 @@ import BuyTickets from "../pages/BuyTickets";
 
 const setupRouter = [
   { url: "/", component: HomePage },
-  { url: "/:movieID", component: MovieDetail },
+  // { url: "/:movieID", component: MovieDetail },
+  { url : "/:city/movies/:movieid", component: MovieDetail},
   { url: "/xemphim/:movieID", component: Movie },
   { url: "/search/:keyword", component: MovieSearch },
   { url: "/About", component: About },

@@ -39,11 +39,11 @@ const Sidebar = () => {
               </NavLink>
 
               <NavLink
-                to="/screen"
+                to="/cinema"
                 className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
               >
                 <img className="w-5 h-5" src={image} alt="" />
-                <p className="hidden md:block">Add Screen</p>
+                <p className="hidden md:block">Add Cinema</p>
               </NavLink>
 
               <NavLink
@@ -87,11 +87,11 @@ const Sidebar = () => {
               </NavLink>
 
               <NavLink
-                to="/listscreens"
+                to="/listcinemas"
                 className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
               >
                 <img className="w-5 h-5" src={image} alt="" />
-                <p className="hidden md:block">All Screens</p>
+                <p className="hidden md:block">All Cinemas</p>
               </NavLink>
 
               <NavLink

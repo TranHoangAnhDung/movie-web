@@ -18,6 +18,7 @@ const Navbar = ({ userName, setUserName }) => {
   const handleLogout = () => {
     // Xóa thông tin đăng nhập khi người dùng logout
     localStorage.removeItem("userName");
+    localStorage.removeItem("token")
     setUserName(null);
     navigate("/login");
   };

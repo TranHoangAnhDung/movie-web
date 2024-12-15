@@ -10,7 +10,7 @@ import Login from "./components/Login";
 import Sidebar from "./components/Sidebar";
 
 import CreateMoviePage from "./pages/CreateMovie"
-import CreateScreenPage from "./pages/CreateScreen";
+import CreateCinemaPage from "./pages/CreateCinema";
 import CreateSchedule from "./pages/CreateSchedule";
 import ListMovies from "./pages/ListMovies";
 import CreateCeleb from "./pages/CreateCeleb";
@@ -43,7 +43,7 @@ function App() {
               <Routes>
                 <Route path="/createmovie" element={<CreateMoviePage />}/>
                 <Route path="/schedule" element={<CreateSchedule />} />
-                <Route path="/screen" element={<CreateScreenPage />} />
+                <Route path="/cinema" element={<CreateCinemaPage />} />
                 <Route path="/celeb" element={<CreateCeleb />}/>
                 <Route path="/listmovies" element={<ListMovies />}/>
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const CreateScreenPage = () => {
+const CreateCinemaPage = () => {
   const tempSeatLayout = [
     {
       // platinum
@@ -457,4 +457,4 @@ const CreateScreenPage = () => {
   );
 };
 
-export default CreateScreenPage;
+export default CreateCinemaPage;

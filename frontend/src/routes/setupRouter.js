@@ -13,7 +13,7 @@ import BuyTickets from "../pages/BuyTickets";
 const setupRouter = [
   { url: "/", component: HomePage },
   // { url: "/:movieID", component: MovieDetail },
-  { url : "/:city/movies/:movieid", component: MovieDetail},
+  { url: "/:city/movies/:movieid", component: MovieDetail},
   { url: "/xemphim/:movieID", component: Movie },
   { url: "/search/:keyword", component: MovieSearch },
   { url: "/About", component: About },
@@ -21,6 +21,6 @@ const setupRouter = [
   { url: "/Login", component: Login},
   { url: "/reset-password/:token", component: ResetPassword},
   { url: "/profile", component: MyProfile},
-  { url: "/buytickets", component: BuyTickets}
+  { url: "/:city/movies/:movieid/buytickets", component: BuyTickets}
 ];
 export { setupRouter };

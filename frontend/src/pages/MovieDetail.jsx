@@ -15,8 +15,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 
 const MovieDetail = () => {
-  const { movieid } = useParams(); // Get movie ID from URL
-  const navigate = useNavigate(); // For navigation
+  const { movieid, city } = useParams(); // Get movie ID from URL
+  
+  const navigate = useNavigate(); 
   const [movie, setMovie] = useState(null);
 
   const getMovie = async () => {
@@ -79,7 +80,7 @@ const MovieDetail = () => {
                   </p>
                   <button
                     className="bg-yellow-500 text-white rounded-md px-16 py-2 text-lg font-normal"
-                    onClick={() => navigate(`/buytickets/${movieid}`)} // Redirect to the booking page
+                    onClick={() => navigate(`/${city}/movies/${movieid}/buytickets`)} // Redirect to the booking page
                   >
                     Book Tickets
                   </button>

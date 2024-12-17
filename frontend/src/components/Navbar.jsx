@@ -2,10 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import LocationPopup from "../components/LocationPopup";
+import {RiArrowDropDownFill} from "react-icons/ri"
 
 const Navbar = ({ userName, setUserName }) => {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // search value
+
+  const [showLocationPopup, setShowLocationPopup] = useState(false);
+  
+  const [user, setUser] = useState(null);
 
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const navigate = useNavigate();
@@ -15,10 +21,34 @@ const Navbar = ({ userName, setUserName }) => {
     storedUserName ? setUserName(storedUserName) : [];
   });
 
+  const getUser = async () => {
+    fetch("http://localhost:8080/api/auth/getuser", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+    })
+        .then((res) => {
+            return res.json();
+        })
+        .then((response) => {
+            console.log(response)
+            setUser(response.data)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+
+}
+  const checkLogin = async () => {
+
+  }
+
   const handleLogout = () => {
     // Xóa thông tin đăng nhập khi người dùng logout
     localStorage.removeItem("userName");
-    localStorage.removeItem("token")
+    localStorage.removeItem("token");
     setUserName(null);
     navigate("/login");
   };
@@ -36,6 +66,11 @@ const Navbar = ({ userName, setUserName }) => {
       alert("Vui lòng nhập từ khóa tìm kiếm."); // Thông báo nếu ô tìm kiếm trống
     }
   };
+
+  useEffect(() => {
+    checkLogin()
+    getUser()
+  }, [])
 
   return (
     <nav>
@@ -113,8 +148,21 @@ const Navbar = ({ userName, setUserName }) => {
             </div>
           </div>
         </form>
-        {/* Login Section */}
-        <div className="hidden md:block">
+
+        <div className="hidden md:flex items-center gap-4">
+          {/* City Selection */}
+          <p
+            className="text-white font-semibold flex items-center gap-1 cursor-pointer hover:text-red-600 transition duration-300"
+            onClick={() => setShowLocationPopup(true)}
+          >
+            {user ? user.city : "Select City"}
+            <RiArrowDropDownFill className="text-xl" />
+          </p>
+          {showLocationPopup && (
+            <LocationPopup setShowLocationPopup={setShowLocationPopup} />
+          )}
+
+          {/* Login Section */}
           {userName ? (
             <div className="relative">
               <button

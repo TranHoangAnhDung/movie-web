@@ -11,7 +11,7 @@ import "swiper/css"
 import "swiper/css/pagination"
 
 const MovieList = () => {
-  const [user, setUser] = useState(null); // Initialize user state as null
+  const [user, setUser] = useState(null); 
   const [movies, setMovies] = useState([]);
 
   const getUser = async () => {
@@ -36,13 +36,13 @@ const MovieList = () => {
 
   const getMovies = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/movie/movies`, {
+      const response = await fetch("http://localhost:8080/api/movie/movies", {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      const data = await response.json();
+      const data = await response.json();      
       if (data.ok) {
         setMovies(data.data); // Update movies state with fetched data
       }

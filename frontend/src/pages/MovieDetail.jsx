@@ -74,7 +74,7 @@ const MovieDetail = () => {
                     <BsFillStarFill className="text-yellow-500" />
                     &nbsp;&nbsp;{movie.rating}/5
                   </p>
-                  <p className="text-lg font-medium mb-2">{movie.duration}</p>
+                  <p className="text-lg font-medium mb-2">{movie.duration} mins</p>
                   <p className="text-lg font-medium mb-4 text-gray-300">
                     {movie.genre.join(", ")}
                   </p>

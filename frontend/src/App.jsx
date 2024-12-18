@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import { setupRouter } from "./routes/setupRouter";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"
 
 import Footer from "./components/Footer";
 
@@ -19,6 +21,7 @@ function App() {
     <>
       <div className="bg-black relative pt-28">
         <Navbar userName={userName} setUserName={setUserName}/>
+        <ToastContainer />
         <Routes>
           {setupRouter.map((route, index) => {
             const Page = route.component;

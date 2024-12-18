@@ -10,7 +10,7 @@ const Navbar = ({ userName, setUserName }) => {
   const [searchTerm, setSearchTerm] = useState(""); // search value
 
   const [showLocationPopup, setShowLocationPopup] = useState(false);
-  
+  const [loggedIn, setLoggedIn] = useState(false)
   const [user, setUser] = useState(null);
 
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -42,7 +42,29 @@ const Navbar = ({ userName, setUserName }) => {
 
 }
   const checkLogin = async () => {
-
+    fetch("http://localhost:8080/api/auth/checklogin", {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+  })
+      .then((res) => {
+          return res.json();
+      })
+      .then((response) => {
+          console.log(response)
+          if(response.ok){
+              setLoggedIn(true)
+          }
+          else{
+              setLoggedIn(false)
+          }
+      })
+      .catch((error) => {
+          console.log(error)
+          setLoggedIn(false)
+      })
   }
 
   const handleLogout = () => {
@@ -50,7 +72,8 @@ const Navbar = ({ userName, setUserName }) => {
     localStorage.removeItem("userName");
     localStorage.removeItem("token");
     setUserName(null);
-    navigate("/login");
+    setLoggedIn(false)
+    navigate("/Login");
   };
 
   const toggleDropdown = () => {
@@ -155,7 +178,7 @@ const Navbar = ({ userName, setUserName }) => {
             className="text-white font-semibold flex items-center gap-1 cursor-pointer hover:text-red-600 transition duration-300"
             onClick={() => setShowLocationPopup(true)}
           >
-            {user ? user.city : "Select City"}
+            {user && loggedIn ? user.city : "Select City"}
             <RiArrowDropDownFill className="text-xl" />
           </p>
           {showLocationPopup && (

@@ -51,6 +51,7 @@ const Login = ({setUserName}) => {
           localStorage.setItem("userName", response.data.name)
           setUserName(response.data.name)       // Lưu tên người dùng
           navigate("/")       // Điều hướng đến trang Home
+          window.location.reload();
   
         } else {
           alert("Registered successfully!")

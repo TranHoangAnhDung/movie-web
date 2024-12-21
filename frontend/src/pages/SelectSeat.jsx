@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Payment from "./Payment";
 
 const SelectSeat = () => {
   const { movieid, city, screenid } = useParams();
   const location = useLocation();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Extract query params (e.g., ?date=...)
   const searchParams = new URLSearchParams(location.search);
@@ -283,6 +283,20 @@ const SelectSeat = () => {
     }
   };
 
+  const handleProceedToPayment = () => {
+    const paymentDetails = {
+      selectedSeats,
+      movie,
+      screen,
+      selectedTime,
+      date,
+      totalPrice: selectedSeats.reduce((acc, seat) => acc + seat.price, 0),
+    };
+  
+    // Navigate to the Payment page
+    navigate(`/payment`, { state: paymentDetails });
+  };
+
   return (
     <div className="bg-gray-200 min-h-screen w-full">
       {movie && screen && (
@@ -356,9 +370,10 @@ const SelectSeat = () => {
 
             <button
               className="px-5 py-2 bg-red-500 text-black rounded-lg hover:bg-red-400"
-              onClick={handleBooking}
+              // onClick={handleBooking}
+              onClick={handleProceedToPayment}
             >
-              Book Now
+              Payment
             </button>
           </div>
         </div>

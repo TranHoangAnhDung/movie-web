@@ -7,13 +7,17 @@ import image1 from "../assets/stripe_logo.png";
 import image2 from "../assets/razorpay_logo.png";
 
 const Payment = () => {
+  
   const location = useLocation();
-  // const { selectedSeats, movie, screen, selectedTime, date } = location.state || {};
-  const { selectedSeats, movie, screen, seatDetails, totalPrice, movieTitle, screenName, selectedTime, date } =
+  
+  const { selectedSeats, movie, screen, selectedTime, date, totalPrice } =
     location.state || {};
+
+  const navigate = useNavigate()
+
   const [method, setMethod] = useState("stripe");
 
-  const handleBookTickets = async () => {
+  const handlePayNow = async () => {
     try {
       const response = await fetch(
         "http://localhost:8080/api/movie/bookticket",
@@ -26,34 +30,69 @@ const Payment = () => {
           body: JSON.stringify({
             showTime: selectedTime.showTime,
             showDate: date,
-            movieId: movie.id,
+            movieId: movie._id,
             screenId: screen.screen._id,
-            seats: seatDetails, // Pass the full seat details (row, seat_id, price, etc.)
-            totalPrice: totalPrice,
-            // showTime: selectedTime.showTime,
-            // showDate: date,
-            // movieId: movie.id,
-            // screenId: screen.id,
-            // seats: selectedSeats,
-            // totalPrice: selectedSeats.reduce(
-            //   (acc, seat) => acc + seat.price,
-            //   0
-            // ),
+            seats: selectedSeats,
+            totalPrice,
           }),
         }
       );
+
       const data = await response.json();
       if (data.ok) {
-        toast.success("Booking successful!");
+        toast.success("Payment successful! Booking confirmed.");
+        // Redirect to a confirmation or home page
+        navigate("/", { state: data.data });
       } else {
-        console.error(data);
-        toast.error(data.message);
+        toast.error(data.message || "Payment failed.");
       }
     } catch (err) {
       console.error(err);
       toast.error("Payment failed. Please try again.");
     }
   };
+
+  // const handleBookTickets = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "http://localhost:8080/api/movie/bookticket",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //         body: JSON.stringify({
+  //           showTime: selectedTime.showTime,
+  //           showDate: date,
+  //           movieId: movie.id,
+  //           screenId: screen.screen._id,
+  //           seats: seatDetails, // Pass the full seat details (row, seat_id, price, etc.)
+  //           totalPrice: totalPrice,
+  //           // showTime: selectedTime.showTime,
+  //           // showDate: date,
+  //           // movieId: movie.id,
+  //           // screenId: screen.id,
+  //           // seats: selectedSeats,
+  //           // totalPrice: selectedSeats.reduce(
+  //           //   (acc, seat) => acc + seat.price,
+  //           //   0
+  //           // ),
+  //         }),
+  //       }
+  //     );
+  //     const data = await response.json();
+  //     if (data.ok) {
+  //       toast.success("Booking successful!");
+  //     } else {
+  //       console.error(data);
+  //       toast.error(data.message);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Payment failed. Please try again.");
+  //   }
+  // };
 
   return (
     <div className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80px] border-t">
@@ -87,23 +126,21 @@ const Payment = () => {
           <h2>Booking Details</h2>
           <div className="text-white">
             <p>
-              <strong>Movie:</strong> {movieTitle}
+              <strong>Movie:</strong> {movie?.title}
             </p>
             <p>
-              <strong>Screen:</strong> {screenName}
+              <strong>Screen:</strong> {screen?.screen?.name}
             </p>
-            <p>
-              <strong>Seats:</strong>
-            </p>
-            <ul>
-              {selectedSeats.map((seat, index) => (
-                <li key={index}>{seat}</li>
-              ))}
-            </ul>
+            <p><strong>Showtime:</strong> {selectedTime?.showTime}</p>
+            <p><strong>Date:</strong> {date}</p>
 
             <p>
-              <strong>Total Price:</strong> $
-               {totalPrice}
+          <strong>Seats:</strong>{" "}
+          {selectedSeats.map((seat) => `${seat.row}${seat.col + 1}`).join(", ")}
+        </p>
+
+            <p>
+              <strong>Total Price:</strong> ${totalPrice}
             </p>
           </div>
         </div>
@@ -138,9 +175,9 @@ const Payment = () => {
           <div className="w-full text-end mt-8">
             <button
               className="bg-black text-white px-16 py-3 text-sm"
-              onClick={handleBookTickets}
+              onClick={handlePayNow}
             >
-              BUY TICKET
+              PAY NOW
             </button>
           </div>
         </div>

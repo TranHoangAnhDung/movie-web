@@ -89,7 +89,7 @@ const MovieDetail = () => {
             </div>
           </div>
 
-          <div className="px-12 flex flex-col gap-3 w-full">
+          <div className="px-12 pt-5 flex flex-col gap-3 w-full">
             <h1 className="text-2xl font-semibold text-blue-700">
               About the Movie
             </h1>

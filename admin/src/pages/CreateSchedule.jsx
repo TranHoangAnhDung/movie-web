@@ -7,6 +7,7 @@ const CreateSchedule = () => {
   const [schedule, setSchedule] = useState({
     screenId: "",
     movieId: "",
+    movieName:"",
     showTime: "",
     showDate: "",
   });
@@ -39,7 +40,7 @@ const CreateSchedule = () => {
     if (city === "") return toast.error("Please select a city");
 
     const response = await fetch(
-      `http://localhost:8080/api/movie/screensbycity/${city.toLowerCase()}`
+      `http://localhost:8080/api/movie/screensbycity/${city}`
     );
 
     const data = await response.json();
@@ -54,6 +55,7 @@ const CreateSchedule = () => {
     if (
       !schedule.screenId ||
       !schedule.movieId ||
+      !schedule.movieName ||
       !schedule.showTime ||
       !schedule.showDate
     ) {
@@ -163,7 +165,7 @@ const CreateSchedule = () => {
               } p-4 mb-2 border rounded-md cursor-pointer`}
               key={index}
               onClick={() => {
-                setSchedule({ ...schedule, movieId: movie._id });
+                setSchedule({ ...schedule, movieId: movie._id, movieName: movie.title });
               }}
             >
               <p className="font-semibold text-lg text-gray-800 mb-2">

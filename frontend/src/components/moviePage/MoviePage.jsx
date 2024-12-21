@@ -1,9 +1,9 @@
 import React from 'react'
 
-const MovieContent = () => {
+const MoviePage = () => {
   return (
     <div className='text-white'>MovieContent</div>
   )
 }
 
-export default MovieContent
+export default MoviePage

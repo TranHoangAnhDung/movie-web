@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <div className="bg-black relative pt-28">
+      <div className="bg-black relative pt-20">
         <Navbar userName={userName} setUserName={setUserName}/>
         <ToastContainer />
         <Routes>

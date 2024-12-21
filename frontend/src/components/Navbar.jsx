@@ -33,7 +33,6 @@ const Navbar = ({ userName, setUserName }) => {
             return res.json();
         })
         .then((response) => {
-            console.log(response)
             setUser(response.data)
         })
         .catch((error) => {
@@ -53,7 +52,6 @@ const Navbar = ({ userName, setUserName }) => {
           return res.json();
       })
       .then((response) => {
-          console.log(response)
           if(response.ok){
               setLoggedIn(true)
           }
@@ -192,7 +190,7 @@ const Navbar = ({ userName, setUserName }) => {
                 onClick={toggleDropdown}
                 className="rounded-md bg-red-500 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-red-700 focus:shadow-none active:bg-red-700 hover:bg-red-700 active:shadow-none ml-4"
               >
-                Xin Chào, {userName}
+                Welcome {userName} !
               </button>
 
               {/* Dropdown logout */}
@@ -263,7 +261,7 @@ const Navbar = ({ userName, setUserName }) => {
                       Home
                     </Link>
 
-                    {/* <hr className="w-[0] h-[1px] bg-red-600 border-none mx-auto group-hover:w-[70%] transition duration-500" /> */}
+              
                   </li>
                   <li>
                     <Link

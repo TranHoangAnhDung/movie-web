@@ -7,10 +7,12 @@ const bookingSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "movies",
   },
+  movieTitle: String,
   screenId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "screens",
   },
+  screenName: String,
   seats: [
     {
       // { row: 'D', col: 0, seat_id: '10', price: 300 }
@@ -23,11 +25,13 @@ const bookingSchema = new mongoose.Schema({
   totalPrice: Number,
   paymentId: String,
   paymentType: String,
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "accounts" },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "accounts",
+  },
+  userName: String,
 });
 
-const BookingModel = mongoose.model("bookings", bookingSchema)
+const BookingModel = mongoose.model("bookings", bookingSchema);
 
-export default BookingModel
+export default BookingModel;

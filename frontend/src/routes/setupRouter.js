@@ -9,6 +9,7 @@ import ResetPassword from "../pages/ResetPassword";
 import MyProfile from "../pages/MyProfile"
 import BuyTickets from "../pages/BuyTickets";
 import SelectSeat from "../pages/SelectSeat";
+import Payment from "../pages/Payment"
 
 const setupRouter = [
   { url: "/", component: HomePage },
@@ -20,6 +21,7 @@ const setupRouter = [
   { url: "/reset-password/:token", component: ResetPassword},
   { url: "/profile", component: MyProfile},
   { url: "/:city/movies/:movieid/buytickets", component: BuyTickets},
-  { url: "/:city/movies/:movieid/buytickets/:screenid", component: SelectSeat}
+  { url: "/:city/movies/:movieid/buytickets/:screenid", component: SelectSeat},
+  { url: "/payment", component: Payment}
 ];
 export { setupRouter };

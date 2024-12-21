@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import Payment from "./Payment";
 
 const SelectSeat = () => {
   const { movieid, city, screenid } = useParams();
   const location = useLocation();
+  // const navigate = useNavigate();
 
   // Extract query params (e.g., ?date=...)
   const searchParams = new URLSearchParams(location.search);
@@ -28,7 +30,7 @@ const SelectSeat = () => {
       );
       const data = await response.json();
       if (data.ok) {
-        console.log(data.data);
+        // console.log("Fetched screen data:", data.data);
         setScreen(data.data);
         setSelectedTime(data.data.movieSchedulesforDate[0]);
       } else {
@@ -106,8 +108,8 @@ const SelectSeat = () => {
             <div>
               {/* ROW */}
               {seatType.rows.map((row, rowIndex) => (
-                <div className="flex gap-5 items-center" key={rowIndex}>
-                  <p className="w-max-content font-semibold text-sm bg-primary text-white w-7 h-7 flex justify-center items-center rounded-full leading-none">
+                <div className="flex gap-5 items-center mb-4" key={rowIndex}>
+                  <p className="w-max-content font-semibold text-sm bg-red-500 text-white w-7 h-7 flex justify-center items-center rounded-full leading-none">
                     {row.rowname}
                   </p>
 
@@ -115,44 +117,51 @@ const SelectSeat = () => {
                   <div className="flex gap-12 w-full">
                     {row.cols.map((col, colIndex) => (
                       <div className="flex" key={colIndex}>
-                        {col.seats.map((seat, seatIndex) => (
-                          <div key={seatIndex}>
-                            {/* SEAT ALREADY BOOKED */}
-                            {notAvailableSeats.find(
-                              (s) =>
-                                s.row === row.rowname &&
-                                s.seat_id === seat.seat_id &&
-                                s.col === colIndex
-                            ) ? (
-                              <span className="text-gray-700 bg-gray-200 cursor-not-allowed">
-                                {seatIndex + 1}
-                              </span>
-                            ) : (
-                              <span
-                                className={`${
-                                  selectedSeats.find(
-                                    (s) =>
-                                      s.row === row.rowname &&
-                                      s.seat_id === seat.seat_id &&
-                                      s.col === colIndex
-                                  )
-                                    ? "text-white bg-primary"
-                                    : "text-black cursor-pointer bg-primary"
-                                } w-8 h-8 flex justify-center items-center mr-1 rounded-lg shadow-sm`}
-                                onClick={() =>
-                                  selectDeselectSeat({
-                                    row: row.rowname,
-                                    col: colIndex,
-                                    seat_id: seat.seat_id,
-                                    price: seatType.price,
-                                  })
-                                }
-                              >
-                                {seatIndex + 1}
-                              </span>
-                            )}
-                          </div>
-                        ))}
+                        {col.seats.map((seat, seatIndex) => {
+                          // For the Right Column, adjust the seat numbering
+                          const adjustedSeatIndex =
+                            colIndex === 1 ? seatIndex + 6 : seatIndex; // Start from B7 for Right Column
+                          return (
+                            <div key={seatIndex}>
+                              {/* SEAT ALREADY BOOKED */}
+                              {notAvailableSeats.find(
+                                (s) =>
+                                  s.row === row.rowname &&
+                                  s.seat_id === seat.seat_id &&
+                                  s.col === colIndex
+                              ) ? (
+                                <span className="text-gray-400 bg-gray-300 cursor-not-allowed w-8 h-8 flex justify-center items-center mr-3 rounded-lg shadow-md">
+                                  {row.rowname}
+                                  {adjustedSeatIndex + 1}
+                                </span>
+                              ) : (
+                                <span
+                                  className={`${
+                                    selectedSeats.find(
+                                      (s) =>
+                                        s.row === row.rowname &&
+                                        s.seat_id === seat.seat_id &&
+                                        s.col === colIndex
+                                    )
+                                      ? "bg-red-500 text-white border-2 border-red-600"
+                                      : "bg-green-400 text-black cursor-pointer border-1 border-primary"
+                                  } w-9 h-9 flex justify-center items-center mr-3 rounded-lg shadow-sm`}
+                                  onClick={() =>
+                                    selectDeselectSeat({
+                                      row: row.rowname,
+                                      col: colIndex,
+                                      seat_id: seat.seat_id,
+                                      price: seatType.price,
+                                    })
+                                  }
+                                >
+                                  {row.rowname}
+                                  {adjustedSeatIndex + 1}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     ))}
                   </div>
@@ -167,6 +176,68 @@ const SelectSeat = () => {
       </div>
     );
   };
+
+  // const handleBooking = async () => {
+  //   // console.log("Selected screen ID:", screen.id);
+
+  //   // Prepare selected seats data (seat names like B5, B6, etc.)
+  //   const seatNames = selectedSeats.map((seat) => {
+  //     const row = seat.row; // Row like 'A', 'B', etc.
+  //     const seatNumber = seat.seat_id.slice(1); // Seat number like 1, 2, 3...
+  //     return `${row}${seatNumber}`; // Format like B5, A1, etc.
+  //   });
+
+  //   // Calculate the total price
+  //   const totalPrice = selectedSeats.reduce((acc, seat) => acc + seat.price, 0);
+
+  //   navigate("/payment", {
+  //     state: {
+  //       selectedSeats: seatNames,
+  //       seatDetails: selectedSeats,
+  //       movieTitle: movie.title,
+  //       screenName: screen.screen.name,
+  //       totalPrice: totalPrice,
+  //       selectedTime,
+  //       date,
+  //       movie,
+  //       screen,
+  //     },
+  //   });
+  //   // try {
+  //   //   const response = await fetch(
+  //   //     "http://localhost:8080/api/movie/bookticket",
+  //   //     {
+  //   //       method: "POST",
+  //   //       headers: {
+  //   //         "Content-Type": "application/json",
+  //   //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //   //       },
+  //   //       body: JSON.stringify({
+  //   //         showTime: selectedTime.showTime,
+  //   //         showDate: date,
+  //   //         movieId: movieid,
+  //   //         screenId: screenid,
+  //   //         seats: selectedSeats,
+  //   //         totalPrice: selectedSeats.reduce(
+  //   //           (acc, seat) => acc + seat.price,
+  //   //           0
+  //   //         ),
+  //   //         // paymentId: "123456789",
+  //   //         // paymentType: "online",
+  //   //       }),
+  //   //     }
+  //   //   );
+  //   //   const data = await response.json();
+  //   //   if (data.ok) {
+  //   //     toast.success("Booking Successful");
+  //   //     console.log(data);
+  //   //   } else {
+  //   //     console.error(data);
+  //   //   }
+  //   // } catch (err) {
+  //   //   console.error(err);
+  //   // }
+  // };
 
   const handleBooking = async () => {
     try {
@@ -188,16 +259,23 @@ const SelectSeat = () => {
               (acc, seat) => acc + seat.price,
               0
             ),
-            paymentId: "123456789",
-            paymentType: "online",
+            // paymentId: "123456789",
+            // paymentType: "online",
           }),
         }
       );
       const data = await response.json();
       if (data.ok) {
         toast.success("Booking Successful");
-        console.log(data);
+        console.log("Booking Details:", data.data);
+
+        const { movieTitle, screenName, userName } = data.data;
+        console.log(
+          `Booked Movie: ${movieTitle}, Screen: ${screenName}, User: ${userName}`
+        );
+
       } else {
+        toast.error(data.message || "Booking failed");
         console.error(data);
       }
     } catch (err) {
@@ -226,7 +304,9 @@ const SelectSeat = () => {
             {screen.movieSchedulesforDate.map((time, index) => (
               <h3
                 className={`${
-                  selectedTime?._id === time._id ? "border-2 border-primary text-primary" : "border-2 border-gray-300 text-gray-800"
+                  selectedTime?._id === time._id
+                    ? "border-2 border-green-400 text-green-400"
+                    : "border-2 border-gray-300 text-gray-800"
                 } px-5 py-2 rounded-full text-sm font-normal cursor-pointer`}
                 onClick={() => {
                   setSelectedTime(time);
@@ -241,20 +321,31 @@ const SelectSeat = () => {
           <div className="flex items-center justify-center gap-5 my-5">
             <div className="flex items-center gap-2">
               <span className="bg-gray-300 w-5 h-5 rounded-full flex justify-center items-center text-xs font-semibold text-white"></span>
-              <p className="text-gray-600 text-sm font-semibold">Not available</p>
+              <p className="text-gray-600 text-sm font-semibold">
+                Not available
+              </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="bg-green-500 w-5 h-5 rounded-full flex justify-center items-center text-xs font-semibold text-white"></span>
+              <span className="bg-green-400 w-5 h-5 rounded-full flex justify-center items-center text-xs font-semibold text-white"></span>
               <p className="text-gray-600 text-sm font-semibold">Available</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="bg-primary w-5 h-5 rounded-full flex justify-center items-center text-xs font-semibold text-white"></span>
+              <span className="bg-red-500 w-5 h-5 rounded-full flex justify-center items-center text-xs font-semibold text-white"></span>
               <p className="text-gray-600 text-sm font-semibold">Selected</p>
             </div>
           </div>
 
           {generateSeatLayout()}
 
+          {/* SCREEN ICON */}
+          <div className="flex justify-center items-center my-14">
+            <div className="relative w-96 h-18 bg-gradient-to-t from-gray-800 to-transparent rounded-b-full text-white text-center font-bold text-sm flex justify-center items-center">
+              SCREEN
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4/5 h-1 bg-white"></div>
+            </div>
+          </div>
+
+          {/* BOOK TICKET */}
           <div className="flex items-center justify-between bg-white p-5 my-5 rounded-xl shadow-sm w-[300px]">
             <div className="flex items-center gap-4">
               <h2 className="text-sm font-semibold text-gray-600">Total</h2>
@@ -264,7 +355,7 @@ const SelectSeat = () => {
             </div>
 
             <button
-              className="px-5 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
+              className="px-5 py-2 bg-red-500 text-black rounded-lg hover:bg-red-400"
               onClick={handleBooking}
             >
               Book Now

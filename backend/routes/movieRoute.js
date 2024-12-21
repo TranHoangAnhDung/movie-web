@@ -4,8 +4,10 @@ import {
   addCelebToMovie,
   addMovieScheduleToScreen,
   bookTicket,
+  cancelBooking,
   createMovie,
   createScreen,
+  getAvailableDates,
   getMovies,
   getMoviesId,
   getScheduleByMovies,
@@ -48,5 +50,7 @@ Router.route("/schedulebymovie/:screenid/:date/:movieid").get(
 );
 Router.route("/getuserbookings").get(authToken, getUserBookings);
 Router.route("/getuserbookings/:id").get(authToken, getUserBookingsId);
+Router.route("/getavailabledates/:city/:movieid").get(getAvailableDates)
+Router.route("/cancelbooking/:bookingid").delete(authToken, cancelBooking)
 
 export default Router;

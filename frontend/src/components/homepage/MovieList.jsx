@@ -1,53 +1,55 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
-import MovieListAPI from "../../api/movieListAPI";
 import MovieCard from "./MovieCard";
-import MovieTrailerPopUp from "./MovieTrailer";
 
-import {Swiper, SwiperSlide} from "swiper/react"
-import {Pagination} from "swiper/modules"
-import "swiper/css"
-import "swiper/css/pagination"
+// import PropTypes from "prop-types";
+// import MovieListAPI from "../../api/movieListAPI";
+// import MovieTrailerPopUp from "./MovieTrailer";
+// import {Swiper, SwiperSlide} from "swiper/react"
+// import {Pagination} from "swiper/modules"
+// import "swiper/css"
+// import "swiper/css/pagination"
 
 const MovieList = () => {
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
   const [movies, setMovies] = useState([]);
 
   const getUser = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/auth/getuser", {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       const data = await response.json();
       if (data.ok) {
         setUser(data.data); // Update user state with fetched data
       } else {
-        window.location.href = '/Login'; // Redirect if user isn't logged in
+        window.location.href = "/Login"; // Redirect if user isn't logged in
       }
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error("Error fetching user:", error);
     }
   };
 
   const getMovies = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/movie/movies", {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-      const data = await response.json();      
+      const data = await response.json();
       if (data.ok) {
         setMovies(data.data); // Update movies state with fetched data
       }
     } catch (error) {
-      console.error('Error fetching movies:', error);
+      console.error("Error fetching movies:", error);
     }
   };
 
@@ -56,42 +58,55 @@ const MovieList = () => {
     getUser();
   }, []);
 
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 4, // Show 4 movies on large screens
+      slidesToSlide: 4, // Slide 4 at a time
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2, // Show 2 movies on medium screens
+      slidesToSlide: 2, // Slide 2 at a time
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1, // Show 1 movie on small screens
+      slidesToSlide: 1, // Slide 1 at a time
+    },
+  };
+
   return (
-    <div className="p-4 bg-gray-50 rounded-lg shadow-md">
+    <div className="rounded-lg shadow-md relative my-10">
       {movies.length > 0 && user && (
-        <Swiper
-          slidesPerView={1}
-          spaceBetween={1}
-          pagination={{
-            clickable: true,
-          }}
-          breakpoints={{
-            '@0.00': {
-              slidesPerView: 1,
-              spaceBetween: 2,
-            },
-            '@0.75': {
-              slidesPerView: 2,
-              spaceBetween: 2,
-            },
-            '@1.00': {
-              slidesPerView: 3,
-              spaceBetween: 2,
-            },
-            '@1.50': {
-              slidesPerView: 6,
-              spaceBetween: 2,
-            },
-          }}
-          modules={[Pagination]}
-          className="p-4 bg-gradient-to-b from-gray-50 via-white to-gray-100 rounded-lg shadow-lg"
-        >
-          {movies.map((Movie) => (
-            <SwiperSlide key={Movie._id}>
-              <MovieCard Movie={Movie} user={user} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <>
+          <Carousel
+            responsive={responsive}
+            infinite={false}
+            arrows={true}
+            showDots={false}
+            autoPlay={false}
+            customTransition="all 0.5s"
+            transitionDuration={500}
+            containerClass="carousel-container"
+            itemClass="carousel-item-padding-40-px"
+          >
+            
+              {movies.map((Movie) => (
+                <div key={Movie._id} className="flex flex-row justify-between gap-4">
+                  <MovieCard Movie={Movie} user={user} />
+                </div>
+              ))}
+          
+          </Carousel>
+
+          {/* Show All Button */}
+          <div className="flex justify-center my-7">
+            <button className="rounded-md bg-red-500 py-2 px-6 text-white text-sm font-semibold shadow-md hover:bg-red-600 transition-all">
+              Show More
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

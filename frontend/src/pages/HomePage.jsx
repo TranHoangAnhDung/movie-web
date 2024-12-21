@@ -28,11 +28,11 @@ const HomePage = () => {
   return (
     <>
       <Banner />
-      <div className="p-10">
+      
         {/* <MovieList title={"Phim Hot"} data={movie} />
         <MovieList title={"Phim Đề Cử"} data={movieRate} /> */}
         <MovieList />
-      </div>
+      
     </>
   );
 };

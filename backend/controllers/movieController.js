@@ -1,3 +1,5 @@
+import { mongoose } from "mongoose";
+
 import MovieModel from "../model/Movie.js";
 import ScreenModel from "../model/Screen.js";
 import AccountModel from "../model/Account.js";
@@ -64,13 +66,11 @@ export const updateMovie = async (req, res, next) => {
       return res.status(404).json({ ok: false, message: "Movie not found" });
     }
 
-    res
-      .status(200)
-      .json({
-        ok: true,
-        message: "Movie updated successfully",
-        data: updatedMovie,
-      });
+    res.status(200).json({
+      ok: true,
+      message: "Movie updated successfully",
+      data: updatedMovie,
+    });
   } catch (error) {
     res.json({ ok: false, message: error.message });
   }
@@ -114,7 +114,7 @@ export const createScreen = async (req, res, next) => {
       name,
       location,
       seats,
-      city: city.toLowerCase(),
+      city: city,
       screenType,
       movieSchedules: [],
     });
@@ -132,7 +132,7 @@ export const createScreen = async (req, res, next) => {
 
 export const addMovieScheduleToScreen = async (req, res, next) => {
   try {
-    const { screenId, movieId, showTime, showDate } = req.body;
+    const { screenId, movieId, movieName, showTime, showDate } = req.body;
 
     const screen = await ScreenModel.findById(screenId);
     if (!screen) {
@@ -152,6 +152,7 @@ export const addMovieScheduleToScreen = async (req, res, next) => {
 
     screen.movieSchedules.push({
       movieId,
+      movieName,
       showTime,
       notavailableseats: [],
       showDate,
@@ -183,12 +184,10 @@ export const bookTicket = async (req, res, next) => {
       paymentId,
       paymentType,
     } = req.body;
-    console.log(req.body);
 
-    // You can create a function to verify payment id
+    // create a function to verify payment id if have time
 
     const screen = await ScreenModel.findById(screenId);
-
     if (!screen) {
       return res.status(404).json({
         ok: false,
@@ -200,6 +199,11 @@ export const bookTicket = async (req, res, next) => {
       console.log(schedule);
       let showDate1 = new Date(schedule.showDate);
       let showDate2 = new Date(showDate);
+      // return (
+      //   showDate1.getTime() === showDate2.getTime() &&
+      //   schedule.showTime === showTime &&
+      //   schedule.movieId.toString() === movieId
+      // );
       if (
         showDate1.getDay() === showDate2.getDay() &&
         showDate1.getMonth() === showDate2.getMonth() &&
@@ -227,14 +231,23 @@ export const bookTicket = async (req, res, next) => {
       });
     }
 
-    console.log("before newBooking done");
+    const movie = await MovieModel.findById(movieId);
+    if (!movie) {
+      return res.status(404).json({
+        ok: false,
+        message: "Movie not found",
+      });
+    }
 
     const newBooking = new BookingModel({
       userId: req.userId,
-      showTime,
-      showDate,
       movieId,
       screenId,
+      userName: user.name,
+      movieTitle: movie.title,
+      screenName: screen.name,
+      showTime,
+      showDate,
       seats,
       totalPrice,
       paymentId,
@@ -242,21 +255,22 @@ export const bookTicket = async (req, res, next) => {
     });
     await newBooking.save();
 
-    console.log("newBooking done");
-
     movieSchedule.notAvailableSeats.push(...seats);
     await screen.save();
-
-    console.log("screen saved");
 
     user.bookings.push(newBooking._id);
     await user.save();
 
-    console.log("user saved");
+    // Populate the movie, screen, and user details for response
+    // const populatedBooking = await BookingModel.findById(newBooking._id)
+    //   .populate("movieId", "title") // Populate movie title
+    //   .populate("screenId", "name") // Populate screen name
+    //   .populate("userId", "name"); // Populate user name
 
     res.status(201).json({
       ok: true,
       message: "Booking successful",
+      data: newBooking,
     });
   } catch (error) {
     res.json({ success: false, message: error.message });
@@ -301,7 +315,7 @@ export const getMoviesId = async (req, res, next) => {
 
 export const getScreensByCity = async (req, res, next) => {
   //:city
-  const city = req.params.city.toLowerCase();
+  const city = req.params.city;
 
   try {
     const screens = await ScreenModel.find({ city });
@@ -332,11 +346,6 @@ export const getScreensByMoviesSchedule = async (req, res, next) => {
       return res.status(404).json("No screens found in the specified city");
     }
 
-    // Filter screens based on the movieId
-    // const filteredScreens = screens.filter(screen =>
-    //     screen.movieSchedules.some(schedule => schedule.movieId == movieId)
-    // );
-
     let temp = [];
     // Filter screens based on the showDate
     const filteredScreens = screens.forEach((screen) => {
@@ -352,12 +361,14 @@ export const getScreensByMoviesSchedule = async (req, res, next) => {
           showDate.getFullYear() === bodyDate.getFullYear() &&
           schedule.movieId == movieId
         ) {
-          temp.push(screen);
+          // Make sure screenId is included in the response
+          if (!temp.some((s) => s._id.toString() === screen._id.toString())) {
+            temp.push(screen); // Push screen only once
+          }
+          // temp.push(screen);
         }
       });
     });
-
-    console.log(temp);
 
     res.status(200).json({
       ok: true,
@@ -454,6 +465,81 @@ export const getUserBookingsId = async (req, res, next) => {
       message: "Booking retrieved successfully",
       data: booking,
     });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const getAvailableDates = async (req, res, next) => {
+  try {
+    const city = req.params.city;
+    const movieId = req.params.movieid;
+
+    // Find all the schedules for the given movieId and city
+    const screens = await ScreenModel.find({ city }).populate("movieSchedules");
+    let availableDates = [];
+
+    screens.forEach((screen) => {
+      screen.movieSchedules.forEach((schedule) => {
+        if (schedule.movieId.toString() === movieId) {
+          const showDate = schedule.showDate.toISOString().split("T")[0]; // Get only the date part (e.g., "2023-12-23")
+          if (!availableDates.includes(showDate)) {
+            availableDates.push(showDate);
+          }
+        }
+      });
+    });
+
+    return res.json({ ok: true, data: availableDates });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ ok: false, message: "Failed to fetch available dates" });
+  }
+};
+
+export const cancelBooking = async (req, res, next) => {
+  try {
+    const bookingId = req.params.bookingid;
+    console.log(bookingId);
+
+    const booking = await BookingModel.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ ok: false, message: "Booking not found" });
+    }
+
+    const screen = await ScreenModel.findById(booking.screenId);
+    if (!screen) {
+      return res.status(404).json({ ok: false, message: "Screen not found" });
+    }
+
+    // Loop through each seat in the booking and make it available again
+    booking.seats.forEach((seat) => {
+      // Find the movie schedule that corresponds to the current booking's showtime
+      screen.movieSchedules.forEach((schedule) => {
+        // Only affect the correct schedule for the booked movie
+        if (schedule.showTime === booking.showtime) {
+          // Remove the seat from the `notAvailableSeats` array
+          schedule.notAvailableSeats = schedule.notAvailableSeats.filter(
+            (notAvailableSeat) =>
+              !(
+                notAvailableSeat.row === seat.row &&
+                notAvailableSeat.col === seat.col
+              )
+          );
+        }
+      });
+    });
+
+    // Save the updated screen data with available seats
+    await screen.save();
+
+    // Delete the booking
+    await BookingModel.findByIdAndDelete(bookingId);
+
+    res
+      .status(200)
+      .json({ ok: true, message: "Booking deleted and seats released" });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }

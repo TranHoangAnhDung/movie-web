@@ -12,6 +12,7 @@ const screenSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "movies", // Reference to the Movie model
       },
+      movieName: String,
       showTime: String,
       notAvailableSeats: [
         {

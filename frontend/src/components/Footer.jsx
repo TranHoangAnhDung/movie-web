@@ -7,7 +7,7 @@ const Footer = () => {
       <div className=" relative w-full p-8 px-20 z-10 text-white">
         <div className="grid justify-between grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <h5 className=" text-2xl font-normal text-white">Mind-x</h5>
+            <h5 className=" text-2xl font-normal text-white">MindX</h5>
             <h5 className=" text-3xl font-extrabold text-white">Movies</h5>
             <h5 className=" text-xl font-semibold text-red-500">Experience Movies</h5>
           </div>

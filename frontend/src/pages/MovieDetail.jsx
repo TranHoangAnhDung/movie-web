@@ -16,8 +16,8 @@ import { Pagination } from "swiper/modules";
 
 const MovieDetail = () => {
   const { movieid, city } = useParams(); // Get movie ID from URL
-  
-  const navigate = useNavigate(); 
+
+  const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
 
   const getMovie = async () => {
@@ -71,16 +71,22 @@ const MovieDetail = () => {
                 <div className="flex flex-col text-white gap-3">
                   <p className="text-4xl font-semibold">{movie.title}</p>
                   <p className="text-3xl font-semibold flex items-center gap-1">
-                    <BsFillStarFill className="text-yellow-500" />
+                    <BsFillStarFill className="text-yellow-500 mb-2" />
                     &nbsp;&nbsp;{movie.rating}/5
                   </p>
-                  <p className="text-lg font-medium mb-2">{movie.duration} mins</p>
+                  <p className="text-lg font-medium mb-2">
+                    <i className="fa fa-clock text-yellow-500 px-2"></i>
+                    {movie.duration} mins
+                  </p>
                   <p className="text-lg font-medium mb-4 text-gray-300">
+                    <i className="fa fa-tag text-yellow-500 px-2"></i>
                     {movie.genre.join(", ")}
                   </p>
                   <button
                     className="bg-yellow-500 text-white rounded-md px-16 py-2 text-lg font-normal"
-                    onClick={() => navigate(`/${city}/movies/${movieid}/buytickets`)} // Redirect to the booking page
+                    onClick={() =>
+                      navigate(`/${city}/movies/${movieid}/buytickets`)
+                    } // Redirect to the booking page
                   >
                     Book Tickets
                   </button>

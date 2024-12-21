@@ -1,8 +1,6 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
 
-import image1 from "../../assets/cinema-banner.avif"
-import image2 from "../../assets/movie-banner.avif"
 // import RatingIcon from "../../assets/rating.png";
 // import RatingHalff from "../../assets/rating-half.png";
 // import Img from "../../assets/thelionking.jpeg";
@@ -27,7 +25,10 @@ const Banner = () => {
     },
   };
 
-  const images = [image1, image2]
+  const images = [
+    "https://res.cloudinary.com/dm8km2abq/image/upload/v1734789742/movie-banner_b7mckv.jpg",
+    "https://res.cloudinary.com/dm8km2abq/image/upload/v1734789742/cinema-banner_yduiua.jpg",
+  ];
 
   return (
     <div className="bg-black py-8">
@@ -49,7 +50,7 @@ const Banner = () => {
               <img
                 src={image}
                 alt={`Banner ${index + 1}`}
-                className="w-full h-[350px] object-contain md:object-cover"
+                className="w-full h-[450px] object-contain md:object-cover"
               />
             </div>
           ))}
@@ -111,8 +112,8 @@ const Banner = () => {
     //           className="w-full h-full object-cover"
     //         />
     //         <div
-    //           className="w-full h-full absolute top-0 left-0 flex items-center 
-    //             justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100 
+    //           className="w-full h-full absolute top-0 left-0 flex items-center
+    //             justify-center backdrop-blur-sm opacity-0 group-hover:opacity-100
     //             transition-opacity duration-500 esse-in-out"
     //         >
     //           <img src={Iconplay} alt="play" className="w-16 h-16" />

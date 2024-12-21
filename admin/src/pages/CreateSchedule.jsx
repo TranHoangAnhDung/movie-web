@@ -109,7 +109,7 @@ const CreateSchedule = () => {
 
       {/* Screens List Section */}
       <div className="mb-4">
-        <h1 className="text-xl font-semibold mb-2">Screens</h1>
+        <h1 className="text-xl font-semibold mb-2">Cinemas</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {screens?.map((screen, index) => (
             <div

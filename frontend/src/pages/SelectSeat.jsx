@@ -273,7 +273,6 @@ const SelectSeat = () => {
         console.log(
           `Booked Movie: ${movieTitle}, Screen: ${screenName}, User: ${userName}`
         );
-
       } else {
         toast.error(data.message || "Booking failed");
         console.error(data);
@@ -284,6 +283,10 @@ const SelectSeat = () => {
   };
 
   const handleProceedToPayment = () => {
+    if (!selectedSeats || selectedSeats.length === 0) {
+      toast.error("Please select at least one seat");
+      return;
+    }
     const paymentDetails = {
       selectedSeats,
       movie,
@@ -292,7 +295,7 @@ const SelectSeat = () => {
       date,
       totalPrice: selectedSeats.reduce((acc, seat) => acc + seat.price, 0),
     };
-  
+
     // Navigate to the Payment page
     navigate(`/payment`, { state: paymentDetails });
   };

@@ -5,9 +5,8 @@ import ScreenModel from "../model/Screen.js";
 import AccountModel from "../model/Account.js";
 import BookingModel from "../model/Booking.js";
 
-{
-  /* ADMIN ACCESS */
-}
+/* ADMIN ACCESS */
+
 export const createMovie = async (req, res, next) => {
   try {
     const {
@@ -169,9 +168,80 @@ export const addMovieScheduleToScreen = async (req, res, next) => {
   }
 };
 
-{
-  /* USER ACCESS */
-}
+export const removeScreen = async (req, res, next) => {
+  try {
+    await ScreenModel.findByIdAndDelete(req.body.id);
+
+    res.status(200).json({ ok: true, message: "Cinema removed" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const updateScreen = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    const updatedScreen = await ScreenModel.findByIdAndUpdate(
+      id,
+      { $set: updatedData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedScreen) {
+      return res.status(404).json({ ok: false, message: "Screen not found" });
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Screen updated successfully",
+      data: updatedScreen,
+    });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+export const getSchedules = async (req, res, next) => {
+  try {
+    // const screens = await ScreenModel.find({})
+    //   .select("movieSchedules")
+    //   .populate("movieSchedules.movieId");
+
+    //   // Gom toàn bộ movieSchedules từ tất cả các screens
+    // const allSchedules = screens.reduce((acc, screen) => {
+    //   return acc.concat(screen.movieSchedules);
+    // }, []);
+
+    const screens = await ScreenModel.find({})
+      .select("name location screenType movieSchedules")
+      .populate("movieSchedules.movieId", "movieName");
+
+    const allSchedules = screens.reduce((acc, screen) => {
+      // Thêm thông tin màn hình vào mỗi lịch chiếu
+      const screenSchedules = screen.movieSchedules.map((schedule) => ({
+        ...schedule.toObject(), 
+        screenName: screen.name, 
+        screenLocation: screen.location, 
+        screenType: screen.screenType, 
+      }));
+      return acc.concat(screenSchedules);
+    }, []);
+
+    res.status(200).json({
+      ok: true,
+      message: "Movie schedules fetched successfully",
+      data: allSchedules,
+    });
+  } catch (error) {
+    console.error("Error fetching movie schedules:", error.message);
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};
+
+/* USER ACCESS */
+
 export const bookTicket = async (req, res, next) => {
   try {
     const {
@@ -495,52 +565,5 @@ export const getAvailableDates = async (req, res, next) => {
     return res
       .status(500)
       .json({ ok: false, message: "Failed to fetch available dates" });
-  }
-};
-
-export const cancelBooking = async (req, res, next) => {
-  try {
-    const bookingId = req.params.bookingid;
-    console.log(bookingId);
-
-    const booking = await BookingModel.findById(bookingId);
-    if (!booking) {
-      return res.status(404).json({ ok: false, message: "Booking not found" });
-    }
-
-    const screen = await ScreenModel.findById(booking.screenId);
-    if (!screen) {
-      return res.status(404).json({ ok: false, message: "Screen not found" });
-    }
-
-    // Loop through each seat in the booking and make it available again
-    booking.seats.forEach((seat) => {
-      // Find the movie schedule that corresponds to the current booking's showtime
-      screen.movieSchedules.forEach((schedule) => {
-        // Only affect the correct schedule for the booked movie
-        if (schedule.showTime === booking.showtime) {
-          // Remove the seat from the `notAvailableSeats` array
-          schedule.notAvailableSeats = schedule.notAvailableSeats.filter(
-            (notAvailableSeat) =>
-              !(
-                notAvailableSeat.row === seat.row &&
-                notAvailableSeat.col === seat.col
-              )
-          );
-        }
-      });
-    });
-
-    // Save the updated screen data with available seats
-    await screen.save();
-
-    // Delete the booking
-    await BookingModel.findByIdAndDelete(bookingId);
-
-    res
-      .status(200)
-      .json({ ok: true, message: "Booking deleted and seats released" });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
   }
 };

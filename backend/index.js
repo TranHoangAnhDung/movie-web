@@ -1,13 +1,8 @@
 import express from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors"
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import nodemailer from 'nodemailer'
 
 import connectDB from "./config/mongodb.js"
-import connectCloudinary from "./config/cloudinary.js";
 
 import accountRoute from "./routes/accountRoute.js"
 import movieRoute from "./routes/movieRoute.js"
@@ -17,7 +12,6 @@ import imageRoute from "./routes/imageRoute.js"
 // App Config
 dotenv.config();
 connectDB()
-// connectCloudinary()
 const app = express();
 
 // middleware

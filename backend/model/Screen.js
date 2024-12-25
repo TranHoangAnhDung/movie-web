@@ -5,7 +5,7 @@ const screenSchema = new mongoose.Schema({
   location: String,
   seats: Array,
   city: String,
-  screenType: String, // Example: "Standard", "IMAX", "VIP", etc.
+  screenType: String, // Example: "2D", "IMAX", "3D"
   movieSchedules: [
     {
       movieId: {

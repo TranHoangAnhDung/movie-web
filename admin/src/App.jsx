@@ -1,6 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
-import {Routes, Route} from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,12 +9,13 @@ import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Sidebar from "./components/Sidebar";
 
-import CreateMoviePage from "./pages/CreateMovie"
+import CreateMoviePage from "./pages/CreateMovie";
 import CreateCinemaPage from "./pages/CreateCinema";
 import CreateSchedule from "./pages/CreateSchedule";
 import ListMovies from "./pages/ListMovies";
 import CreateCeleb from "./pages/CreateCeleb";
 import ListCinema from "./pages/ListCinema";
+import ListSchedule from "./pages/ListSchedule";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -34,25 +35,22 @@ function App() {
         <Login setToken={setToken} />
       ) : (
         <>
-          <Navbar setToken= {setToken}/>
+          <Navbar setToken={setToken} />
           <hr />
-
           <div className="flex w-full">
             <Sidebar />
-
             <div className="w-[70%] mx-auto ml-[max(5vw,25px) my-8 text-gray-600 text-base">
               <Routes>
-                <Route path="/createmovie" element={<CreateMoviePage />}/>
+                <Route path="/createmovie" element={<CreateMoviePage />} />
                 <Route path="/schedule" element={<CreateSchedule />} />
                 <Route path="/cinema" element={<CreateCinemaPage />} />
-                <Route path="/celeb" element={<CreateCeleb />}/>
-                <Route path="/listmovies" element={<ListMovies />}/>
-                <Route path="/listcinemas" element={<ListCinema />}/> 
-
+                <Route path="/celeb" element={<CreateCeleb />} />
+                <Route path="/listmovies" element={<ListMovies />} />
+                <Route path="/listcinemas" element={<ListCinema />} />
+                <Route path="/listschedules" element={<ListSchedule />} />
+                <Route path="*" element={<Navigate to="/listmovies" />} />
               </Routes>
-
             </div>
-
           </div>
         </>
       )}

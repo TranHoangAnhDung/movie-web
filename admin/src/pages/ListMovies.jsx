@@ -14,7 +14,7 @@ const ListMovies = () => {
 
   const fetchList = async () => {
     try {
-      const response = await axios.get(backendUrl + "/api/movie/movies");
+      const response = await axios.get(`${backendUrl}/api/movie/movies`);
       if (response.data.ok) {
         setList(response.data.data);
         console.log(response.data);
@@ -29,12 +29,11 @@ const ListMovies = () => {
 
   const removeMovie = async (id) => {
     try {
-      const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        backendUrl + "/api/movie/remove",
+        `${backendUrl}/api/movie/removemovie`,
         { id },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
 
       if (response.data.ok) {
@@ -52,7 +51,7 @@ const ListMovies = () => {
 
   const openModal = (movie) => {
     setCurrentMovie(movie);
-    setUpdatedMovie(movie); // Pre-fill form with current movie data
+    setUpdatedMovie(movie); 
     setNewPortraitImg(null);
     setModalIsOpen(true);
   };
@@ -91,26 +90,25 @@ const ListMovies = () => {
 
   const handleUpdate = async () => {
     try {
-      const token = localStorage.getItem("token");
       let portraitImgUrl = updatedMovie.portraitImgUrl;
 
       if (newPortraitImg) {
         portraitImgUrl = await handleImageUpload(newPortraitImg);
-        if (!portraitImgUrl) return; // Stop if image upload fails
+        if (!portraitImgUrl) return; 
       }
 
       const response = await axios.put(
-        `${backendUrl}/api/movie/update/${currentMovie._id}`,
+        `${backendUrl}/api/movie/updatemovie/${currentMovie._id}`,
         { ...updatedMovie, portraitImgUrl },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
       if (response.data.ok) {
         toast.success("Movie updated successfully!");
         closeModal();
-        fetchList(); // Refresh the list
+        fetchList();
       } else {
         toast.error(response.data.message);
       }
@@ -131,10 +129,13 @@ const ListMovies = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
+                No.
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Image
               </th>
               <th scope="col" className="px-6 py-3">
-                Title
+                Name
               </th>
               <th scope="col" className="px-6 py-3">
                 Rating
@@ -159,6 +160,9 @@ const ListMovies = () => {
                   key={index}
                   className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
                 >
+                  <th scope="row" className="px-6 py-4 font-medium">
+                    {index + 1} .
+                  </th>
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -198,56 +202,6 @@ const ListMovies = () => {
         </table>
       </div>
 
-      {/* <div className="flex flex-col gap-2">  */}
-      {/* ---- List Table Title ------ */}
-      {/* <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm ">
-          <b>Image</b>
-          <b>Title</b>
-          <b>Rating</b>
-          <b>Genre</b>
-          <b>Duration</b>
-          <b className="text-center">Action</b>
-        </div>
-
-        {/* ---- Movie List ------ */}
-      {/* {list.map((item, index) => {
-          return (
-            <div
-              key={index}
-              className="grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border text-sm"
-            >
-              <img className="w-24" src={item.portraitImgUrl} alt="" />
-              <p>{item.title}</p>
-              <p>{item.rating}</p>
-
-              <div className="flex flex-col gap-1">
-                {item.genre.map((genre, genreIndex) => (
-                  <p key={genreIndex} className="inline-block">
-                    {genre}
-                  </p>
-                ))}
-              </div>
-
-              <p>{item.duration}</p>
-
-              <div className="flex justify-end md:justify-center gap-7">
-                <img
-                  src={image}
-                  className="cursor-pointer text-blue-500 hover:text-blue-700 w-5"
-                  onClick={() => openModal(item)}
-                />
-                <span
-                  className="cursor-pointer text-red-500 hover:text-red-700"
-                  onClick={() => removeMovie(item._id)}
-                >
-                  X
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div> */}
-
       {/* Modal for Editing Movie */}
       {modalIsOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -265,7 +219,7 @@ const ListMovies = () => {
             </div>
 
             <div>
-              <label className="block mb-1">Movie Title</label>
+              <label className="block mb-1">Movie Name</label>
               <input
                 type="text"
                 name="title"

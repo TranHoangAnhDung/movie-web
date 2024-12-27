@@ -177,111 +177,6 @@ const SelectSeat = () => {
     );
   };
 
-  // const handleBooking = async () => {
-  //   // console.log("Selected screen ID:", screen.id);
-
-  //   // Prepare selected seats data (seat names like B5, B6, etc.)
-  //   const seatNames = selectedSeats.map((seat) => {
-  //     const row = seat.row; // Row like 'A', 'B', etc.
-  //     const seatNumber = seat.seat_id.slice(1); // Seat number like 1, 2, 3...
-  //     return `${row}${seatNumber}`; // Format like B5, A1, etc.
-  //   });
-
-  //   // Calculate the total price
-  //   const totalPrice = selectedSeats.reduce((acc, seat) => acc + seat.price, 0);
-
-  //   navigate("/payment", {
-  //     state: {
-  //       selectedSeats: seatNames,
-  //       seatDetails: selectedSeats,
-  //       movieTitle: movie.title,
-  //       screenName: screen.screen.name,
-  //       totalPrice: totalPrice,
-  //       selectedTime,
-  //       date,
-  //       movie,
-  //       screen,
-  //     },
-  //   });
-  //   // try {
-  //   //   const response = await fetch(
-  //   //     "http://localhost:8080/api/movie/bookticket",
-  //   //     {
-  //   //       method: "POST",
-  //   //       headers: {
-  //   //         "Content-Type": "application/json",
-  //   //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //   //       },
-  //   //       body: JSON.stringify({
-  //   //         showTime: selectedTime.showTime,
-  //   //         showDate: date,
-  //   //         movieId: movieid,
-  //   //         screenId: screenid,
-  //   //         seats: selectedSeats,
-  //   //         totalPrice: selectedSeats.reduce(
-  //   //           (acc, seat) => acc + seat.price,
-  //   //           0
-  //   //         ),
-  //   //         // paymentId: "123456789",
-  //   //         // paymentType: "online",
-  //   //       }),
-  //   //     }
-  //   //   );
-  //   //   const data = await response.json();
-  //   //   if (data.ok) {
-  //   //     toast.success("Booking Successful");
-  //   //     console.log(data);
-  //   //   } else {
-  //   //     console.error(data);
-  //   //   }
-  //   // } catch (err) {
-  //   //   console.error(err);
-  //   // }
-  // };
-
-  const handleBooking = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:8080/api/movie/bookticket",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            showTime: selectedTime.showTime,
-            showDate: date,
-            movieId: movieid,
-            screenId: screenid,
-            seats: selectedSeats,
-            totalPrice: selectedSeats.reduce(
-              (acc, seat) => acc + seat.price,
-              0
-            ),
-            // paymentId: "123456789",
-            // paymentType: "online",
-          }),
-        }
-      );
-      const data = await response.json();
-      if (data.ok) {
-        toast.success("Booking Successful");
-        console.log("Booking Details:", data.data);
-
-        const { movieTitle, screenName, userName } = data.data;
-        console.log(
-          `Booked Movie: ${movieTitle}, Screen: ${screenName}, User: ${userName}`
-        );
-      } else {
-        toast.error(data.message || "Booking failed");
-        console.error(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const handleProceedToPayment = () => {
     if (!selectedSeats || selectedSeats.length === 0) {
       toast.error("Please select at least one seat");
@@ -373,7 +268,6 @@ const SelectSeat = () => {
 
             <button
               className="px-5 py-2 bg-red-500 text-black rounded-lg hover:bg-red-400"
-              // onClick={handleBooking}
               onClick={handleProceedToPayment}
             >
               Payment

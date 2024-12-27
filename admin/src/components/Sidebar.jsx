@@ -17,7 +17,7 @@ const Sidebar = () => {
   return (
     <div className="w-[18%] min-h-screen border-r-2">
       <div className="flex flex-col gap-4 pt-6 pl-[20%] text-[15px]">
-        {/* Add Menu Section */}
+        {/* Bookings management Section */}
         <div className="flex flex-col gap-3">
           <button
             onClick={toggleAddMenu}
@@ -30,30 +30,6 @@ const Sidebar = () => {
           {/* Collapsible Add Menu Items */}
           {isAddMenuOpen && (
             <div className="flex flex-col gap-3 ml-4">
-              <NavLink
-                to="/createmovie"
-                className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
-              >
-                <img className="w-5 h-5" src={image} alt="" />
-                <p className="hidden md:block">Add Movie</p>
-              </NavLink>
-
-              <NavLink
-                to="/cinema"
-                className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
-              >
-                <img className="w-5 h-5" src={image} alt="" />
-                <p className="hidden md:block">Add Cinema</p>
-              </NavLink>
-
-              <NavLink
-                to="/schedule"
-                className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
-              >
-                <img className="w-5 h-5" src={image} alt="" />
-                <p className="hidden md:block">Add Schedule</p>
-              </NavLink>
-
               <NavLink
                 to="/celeb"
                 className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
@@ -72,7 +48,7 @@ const Sidebar = () => {
             className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
           >
             <img className="w-5 h-5" src={image} alt="" />
-            <p className="hidden md:block">Lists</p>
+            <p className="hidden md:block">Lists Management</p>
           </button>
 
           {/* Collapsible List Items */}
@@ -105,13 +81,6 @@ const Sidebar = () => {
             </div>
           )}
         </div>
-        {/* <NavLink
-          to="/listmovies"
-          className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
-        >
-          <img className="w-5 h-5" src={image} alt="" />
-          <p className="hidden md:block">Lists</p>
-        </NavLink> */}
       </div>
     </div>
   );

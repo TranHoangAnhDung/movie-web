@@ -4,12 +4,14 @@ import axios from "axios";
 
 import image from "../assets/noteicon.jpg";
 import { backendUrl } from "../App";
+import CreateCinemaPage from "../components/CreateCinema";
 
 const ListCinema = () => {
   const [city, setCity] = useState("");
   const [screens, setScreens] = useState([]);
   const [editScreen, setEditScreen] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showAddCinema, setShowAddCinema] = useState(false);
 
   const getScreensByCity = async () => {
     try {
@@ -32,7 +34,9 @@ const ListCinema = () => {
       await axios.post(
         `${backendUrl}/api/movie/removescreen`,
         { id },
-        {headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       setScreens((prev) => prev.filter((screen) => screen._id !== id));
@@ -50,11 +54,13 @@ const ListCinema = () => {
   const handleSaveEdit = async () => {
     try {
       console.log(editScreen);
-      
+
       const response = await axios.put(
         `${backendUrl}/api/movie/updatescreen/${editScreen._id}`,
         editScreen,
-        {headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }}
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       if (response.data.ok) {
         setScreens((prev) =>
@@ -72,22 +78,31 @@ const ListCinema = () => {
 
   return (
     <div className="p-6">
-      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4 sm:justify-between">
         {/* City Search Section */}
-        <input
-          type="text"
-          name="city"
-          id="city"
-          placeholder="City"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="p-2 border border-gray-300 rounded-md w-full sm:w-64"
-        />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+          <input
+            type="text"
+            name="city"
+            id="city"
+            placeholder="City"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="p-2 border border-gray-300 rounded-md w-full sm:w-64"
+          />
+          <button
+            onClick={() => getScreensByCity()}
+            className="mt-2 sm:mt-0 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition w-full sm:w-auto"
+          >
+            Search
+          </button>
+        </div>
+
         <button
-          onClick={() => getScreensByCity()}
-          className="mt-2 sm:mt-0 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 transition w-full sm:w-auto"
+          onClick={() => setShowAddCinema(true)}
+          className="mt-2 sm:mt-0 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition w-full sm:w-auto sm:ml-auto"
         >
-          Search
+          Add Cinema
         </button>
       </div>
 
@@ -167,6 +182,21 @@ const ListCinema = () => {
         </div>
       ) : (
         <p className="mt-4 text-gray-500">No cinemas to display.</p>
+      )}
+
+      {/* Add Cinema Toggle */}
+      {showAddCinema && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-end">
+          <div className="bg-white w-1/3 h-full p-8 relative">
+            <button
+              onClick={() => setShowAddCinema(false)}
+              className="absolute top-3 right-4 text-gray-500 hover:text-gray-800"
+            >
+              X
+            </button>
+            <CreateCinemaPage setShowAddCinema={setShowAddCinema}/>
+          </div>
+        </div>
       )}
 
       {/* Edit Modal */}

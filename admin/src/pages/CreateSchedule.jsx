@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import image from "../assets/rating.png";
+import { backendUrl } from "../App";
 
 const CreateSchedule = () => {
   const [schedule, setSchedule] = useState({
     screenId: "",
     movieId: "",
-    movieName:"",
+    movieName: "",
     showTime: "",
     showDate: "",
   });
@@ -18,7 +19,7 @@ const CreateSchedule = () => {
 
   const getMovies = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/movie/movies");
+      const response = await fetch(`${backendUrl}/api/movie/movies`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch movies");
@@ -40,7 +41,7 @@ const CreateSchedule = () => {
     if (city === "") return toast.error("Please select a city");
 
     const response = await fetch(
-      `http://localhost:8080/api/movie/screensbycity/${city}`
+      `${backendUrl}/api/movie/screensbycity/${city}`
     );
 
     const data = await response.json();
@@ -48,8 +49,6 @@ const CreateSchedule = () => {
 
     console.log(data.data);
   };
-
-  const adminToken = localStorage.getItem("token");
 
   const createSchedule = async () => {
     if (
@@ -64,14 +63,13 @@ const CreateSchedule = () => {
     }
 
     const response = await fetch(
-      "http://localhost:8080/api/movie/addmoviescheduletoscreen",
+      `${backendUrl}/api/movie/addmoviescheduletoscreen`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
-        credentials: "include",
         body: JSON.stringify(schedule),
       }
     );
@@ -114,7 +112,7 @@ const CreateSchedule = () => {
           {screens?.map((screen, index) => (
             <div
               className={`${
-                schedule.screenId === screen._id ? "bg-blue-100" : "bg-white"
+                schedule.screenId === screen._id ? "bg-blue-100" : "bg-gray-300"
               } p-4 border rounded-md cursor-pointer`}
               key={index}
               onClick={() => {
@@ -148,7 +146,6 @@ const CreateSchedule = () => {
                   {screen.screenType}
                 </span>
               </div>
-
             </div>
           ))}
         </div>
@@ -161,23 +158,27 @@ const CreateSchedule = () => {
           {movies?.map((movie, index) => (
             <div
               className={`${
-                schedule.movieId === movie._id ? "bg-blue-100" : "bg-white"
+                schedule.movieId === movie._id ? "bg-blue-100" : "bg-gray-300"
               } p-4 mb-2 border rounded-md cursor-pointer`}
               key={index}
               onClick={() => {
-                setSchedule({ ...schedule, movieId: movie._id, movieName: movie.title });
+                setSchedule({
+                  ...schedule,
+                  movieId: movie._id,
+                  movieName: movie.title,
+                });
               }}
             >
               <p className="font-semibold text-lg text-gray-800 mb-2">
                 Name: <span className="text-blue-600">{movie.title}</span>
               </p>
               <p className="text-gray-600 mb-2">
-                <span className="font-medium">Descript:</span>{" "}
+                <span className="font-medium">Description:</span>{" "}
                 {movie.description}
               </p>
               <p className="text-gray-600 mb-2 flex gap-2">
                 <span className="font-medium">Rating:</span> {movie.rating}
-                <img src={image} alt="" className="w-3 h-3" />
+                <img src={image} alt="" className="w-4 h-4" />
               </p>
 
               <div className="text-gray-600 mb-2">

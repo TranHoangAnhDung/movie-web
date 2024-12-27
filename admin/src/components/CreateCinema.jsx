@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const CreateCinemaPage = () => {
+import { backendUrl } from "../App";
+
+const CreateCinemaPage = ({setShowAddCinema}) => {
   const tempSeatLayout = [
     {
       // platinum
@@ -346,15 +348,13 @@ const CreateCinemaPage = () => {
         return;
       }
 
-      const adminToken = localStorage.getItem("token");
-
       const response = await fetch(
-        "http://localhost:8080/api/movie/createscreen",
+        `${backendUrl}/api/movie/createscreen`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(screen),
         }
@@ -363,7 +363,7 @@ const CreateCinemaPage = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Screen creation successful", data);
-
+        setShowAddCinema(false)
         toast.success("Screen Created Successfully", {
           position: "top-center",
         });

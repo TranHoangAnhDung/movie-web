@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { backendUrl } from "../App";
 import image from "../assets/noteicon.jpg";
+import CreateMoviePage from "../components/CreateMovie";
 
 const ListMovies = () => {
   const [list, setList] = useState([]);
@@ -11,6 +13,8 @@ const ListMovies = () => {
   const [currentMovie, setCurrentMovie] = useState(null); // Movie being edited
   const [updatedMovie, setUpdatedMovie] = useState({});
   const [newPortraitImg, setNewPortraitImg] = useState(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const navigate = useNavigate();
 
   const fetchList = async () => {
     try {
@@ -29,11 +33,12 @@ const ListMovies = () => {
 
   const removeMovie = async (id) => {
     try {
-
       const response = await axios.post(
         `${backendUrl}/api/movie/removemovie`,
         { id },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       if (response.data.ok) {
@@ -49,9 +54,22 @@ const ListMovies = () => {
     }
   };
 
+  //* DRAWER ADD MOVIE *//
+
+  const handleToggleDrawer = () => {
+    setIsDrawerOpen((prev) => !prev);
+  };
+
+  const onMovieAdded = () => {
+    fetchList();
+    setIsDrawerOpen(false);
+  };
+
+  ///* MODAL UPDATE *//
+
   const openModal = (movie) => {
     setCurrentMovie(movie);
-    setUpdatedMovie(movie); 
+    setUpdatedMovie(movie);
     setNewPortraitImg(null);
     setModalIsOpen(true);
   };
@@ -94,7 +112,7 @@ const ListMovies = () => {
 
       if (newPortraitImg) {
         portraitImgUrl = await handleImageUpload(newPortraitImg);
-        if (!portraitImgUrl) return; 
+        if (!portraitImgUrl) return;
       }
 
       const response = await axios.put(
@@ -124,7 +142,25 @@ const ListMovies = () => {
 
   return (
     <>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="flex justify-between items-center py-4 px-6 bg-gray-100">
+        <h1 className="text-xl font-semibold">All Movies Available</h1>
+        <div className="flex gap-3">
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+            onClick={handleToggleDrawer}
+          >
+            Add Movie
+          </button>
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+            onClick={() => navigate("/create-celeb")}
+          >
+            Add Celeb
+          </button>
+        </div>
+      </div>
+
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg mt-4">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -160,15 +196,16 @@ const ListMovies = () => {
                   key={index}
                   className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
                 >
-                  <th scope="row" className="px-6 py-4 font-medium">
+                  <td className="px-6 py-4 font-medium text-white">
                     {index + 1} .
-                  </th>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    <img className="w-24" src={item.portraitImgUrl} alt="" />
-                  </th>
+                  </td>
+                  <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <img
+                      className="w-24"
+                      src={item.portraitImgUrl}
+                      alt={item.title}
+                    />
+                  </td>
                   <td className="px-6 py-4">{item.title}</td>
                   <td className="px-6 py-4">{item.rating}</td>
 
@@ -280,6 +317,22 @@ const ListMovies = () => {
                 Update
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Movie Drawer */}
+      {isDrawerOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
+          <div className="bg-white w-[90%] max-w-[500px] h-full p-6 relative">
+            <button
+              className="absolute top-4 right-4 text-xl"
+              onClick={handleToggleDrawer}
+            >
+              X
+            </button>
+            <h3 className="text-xl font-semibold mb-4">Add New Movie</h3>
+            <CreateMoviePage onMovieAdded={onMovieAdded} />
           </div>
         </div>
       )}

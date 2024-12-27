@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 
 import image from "../assets/upload.jpg";
+import { backendUrl } from "../App";
 
-const CreateMoviePage = () => {
+const CreateMoviePage = ({onMovieAdded}) => {
   const [movie, setMovie] = useState({
     title: "",
     description: "",
@@ -80,7 +81,7 @@ const CreateMoviePage = () => {
       const formData = new FormData();
       formData.append("myimage", image);
 
-      const response = await fetch("http://localhost:8080/image/uploadimage", {
+      const response = await fetch(`${backendUrl}/image/uploadimage`, {
         method: "POST",
         body: formData,
       });
@@ -140,16 +141,13 @@ const CreateMoviePage = () => {
 
       const newMovie = { ...movie, portraitImgUrl, landscapeImgUrl };
 
-      // Get the admin token (you can store it in localStorage or cookies)
-      const adminToken = localStorage.getItem("token");
-
       const response = await fetch(
-        "http://localhost:8080/api/movie/createmovie",
+        `${backendUrl}/api/movie/createmovie`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${adminToken}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(newMovie),
         }
@@ -159,6 +157,8 @@ const CreateMoviePage = () => {
         const data = await response.json();
         console.log("Movie creation successful", data);
 
+        onMovieAdded();
+        
         toast.success("Movie Created Successfully", {
           position: "top-center",
         });

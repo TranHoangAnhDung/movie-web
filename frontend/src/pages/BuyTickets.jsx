@@ -73,8 +73,8 @@ const BuyTickets = () => {
       const data = await res.json();
 
       if (data.ok) {
-        console.log(data);
         setTheatres(data.data);
+        // console.log(data.data);
       } else {
         console.error(data);
       }
@@ -121,10 +121,10 @@ const BuyTickets = () => {
                   }`}
                 >
                   {new Date(date).toLocaleDateString("en-US", {
-                    weekday:"long",
+                    weekday: "long",
                     month: "short",
                     day: "numeric",
-                    year:"numeric"
+                    year: "numeric",
                   })}
                 </button>
               ))}
@@ -134,6 +134,22 @@ const BuyTickets = () => {
           {theatres && theatres.length > 0 && (
             <div className="w-11/12 mx-auto my-5 shadow-lg bg-white p-5 rounded-lg">
               {theatres.map((screen, index) => {
+                // Lọc các lịch chiếu theo ngày được chọn
+                const filteredSchedules = screen.movieSchedules.filter(
+                  (schedule) => {
+                    const scheduleDate = new Date(schedule.showDate)
+                      .toISOString()
+                      .split("T")[0];
+
+                    const selectedDateString = new Date(selectedDate)
+                      .toISOString()
+                      .split("T")[0];
+
+                    return scheduleDate === selectedDateString;
+                  }
+                );
+                // console.log(filteredSchedules);
+
                 return (
                   <div
                     className="flex justify-between items-center my-2 py-2 border-b border-gray-200 last:border-none cursor-pointer transition-all duration-300"
@@ -147,7 +163,26 @@ const BuyTickets = () => {
                         {screen.location}
                       </h3>
                     </div>
-                    
+
+                    {/* Render phần showTimes */}
+                    <div className="mt-2">
+                      {filteredSchedules.length > 0 && (
+                        <div className="text-sm">
+                          <h2 className="font-semibold">Show Times:</h2>
+                          <div className="flex flex-wrap gap-2">
+                            {filteredSchedules.map((schedule, index) => (
+                              <span
+                                key={index}
+                                className="py-1 px-3 bg-gray-100 rounded-full text-gray-800 shadow-sm"
+                              >
+                                {schedule.showTime}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     <div>
                       <Link
                         to={`${location.pathname}/${screen._id}?date=${selectedDate}`}
@@ -161,34 +196,6 @@ const BuyTickets = () => {
               })}
             </div>
           )}
-          {/* {theatres && theatres.length > 0 && (
-            <div className="w-11/12 mx-auto my-5 shadow-lg bg-white p-5 rounded-lg">
-              {theatres.map((screen, index) => {
-                const screenid = screen._id;
-                return (
-                  <div
-                    className="flex justify-between items-center my-2 py-2 border-b border-gray-200 last:border-none cursor-pointer transition-all duration-300"
-                    key={index}
-                  >
-                    <div>
-                      <h2 className="text-lg font-semibold">
-                        {screen.name} - {screen.screenType}
-                      </h2>
-                      <h3 className="text-sm font-semibold">
-                        {screen.location}
-                      </h3>
-                    </div>
-                    <Link
-                      to={`${location.pathname}/${screenid}?date=${selectedDate}`}
-                      className="bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Select
-                    </Link>
-                  </div>
-                );
-              })}
-            </div>
-          )} */}
         </div>
       )}
     </>

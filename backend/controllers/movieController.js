@@ -246,21 +246,61 @@ export const updateSchedule = async (req, res, next) => {
       (schedule) => schedule._id.toString() === scheduleId
     );
     if (scheduleIndex === -1) {
-      return res.status(404).json({ message: 'Movie schedule not found' });
+      return res.status(404).json({ message: "Movie schedule not found" });
     }
-    
+
     // Giữ lại movieId và chỉ cập nhật các trường cần thiết
-    const scheduleToUpdate = screen.movieSchedules[scheduleIndex]
+    const scheduleToUpdate = screen.movieSchedules[scheduleIndex];
 
     const updatedScheduleData = {
-      ...scheduleToUpdate,  // Giữ lại dữ liệu cũ
-      ...updatedSchedule,   // Cập nhật các trường mới từ frontend
+      ...scheduleToUpdate, // Giữ lại dữ liệu cũ
+      ...updatedSchedule, // Cập nhật các trường mới từ frontend
     };
 
     // Đảm bảo movieId không bị mất
     updatedScheduleData.movieId = scheduleToUpdate.movieId;
 
+    // Cập nhật lại phần unavailable seats
+    screen.movieSchedules[scheduleIndex].notAvailableSeats =
+      updatedSchedule.notAvailableSeats;
+
     // Cập nhật lại schedule trong movieSchedules
+    screen.movieSchedules[scheduleIndex] = updatedScheduleData;
+
+    const bookings = await BookingModel.find({
+      screenId,
+      showTime: scheduleToUpdate.showTime,
+      showDate: scheduleToUpdate.showDate,
+    });
+
+    for (const booking of bookings) {
+      // Đồng bộ các trường liên quan
+      booking.showTime = updatedSchedule.showTime 
+      booking.showDate = updatedSchedule.showDate 
+      booking.movieTitle = updatedSchedule.movieName 
+      booking.screenName = screen.name 
+      booking.seats = updatedSchedule.notAvailableSeats; // chỉnh sửa từ khúc này
+
+      booking.seats = booking.seats.map((seat) => {
+        const updatedSeat = updatedSchedule.notAvailableSeats.find(
+          (updated) => updated.seat_id === seat.seat_id
+        );
+        if (updatedSeat) {
+          return {
+            ...seat,
+            price: updatedSeat.price, 
+          };
+        }
+        return seat;
+      });
+
+      // Tính lại tổng giá `totalPrice` từ giá từng ghế
+      booking.totalPrice = booking.seats.reduce((sum, seat) => sum + seat.price, 0);
+
+      await booking.save();
+    }
+
+    // Lưu lại thay đổi vào Screen
     screen.movieSchedules[scheduleIndex] = updatedScheduleData;
 
     await screen.save();
@@ -282,7 +322,7 @@ export const removeSchedule = async (req, res, next) => {
       (schedule) => schedule._id.toString() === scheduleId
     );
     if (scheduleIndex === -1) {
-      return res.status(404).json({ message: 'Movie schedule not found' });
+      return res.status(404).json({ message: "Movie schedule not found" });
     }
 
     screen.movieSchedules.splice(scheduleIndex, 1);
@@ -320,12 +360,11 @@ export const bookTicket = async (req, res, next) => {
     if (!screen) {
       return res.status(404).json({
         ok: false,
-        message: "Theatre not found",
+        message: "Cinema not found",
       });
     }
 
     const movieSchedule = screen.movieSchedules.find((schedule) => {
-      console.log(schedule);
       let showDate1 = new Date(schedule.showDate);
       let showDate2 = new Date(showDate);
       // return (
@@ -510,7 +549,6 @@ export const getScheduleByMovies = async (req, res, next) => {
   const movieId = req.params.movieid;
 
   const screen = await ScreenModel.findById(screenId);
-
   if (!screen) {
     return res.status(404).json("Screen not found");
   }
@@ -595,7 +633,7 @@ export const getAvailableDates = async (req, res, next) => {
 
     // Find all the schedules for the given movieId and city
     const screens = await ScreenModel.find({ city }).populate("movieSchedules");
-    
+
     let availableDates = [];
 
     screens.forEach((screen) => {

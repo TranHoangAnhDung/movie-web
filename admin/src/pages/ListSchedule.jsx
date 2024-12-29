@@ -27,6 +27,7 @@ const ListSchedule = () => {
     showTime: "",
     showDate: "",
     notAvailableSeats: [],
+    totalPrice: "",
   });
 
   const openEditModal = (schedule) => {
@@ -37,6 +38,7 @@ const ListSchedule = () => {
       showDate: schedule.showDate,
       notAvailableSeats: schedule.notAvailableSeats,
       screenId: schedule.screenId,
+      totalPrice: schedule.totalPrice,
     });
     setIsModalOpen(true);
   };
@@ -45,7 +47,7 @@ const ListSchedule = () => {
     try {
       const response = await axios.put(
         `${backendUrl}/api/movie/screens/${selectedSchedule.screenId}/movie-schedules/${selectedSchedule._id}`,
-        formData,
+       formData, 
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -59,8 +61,10 @@ const ListSchedule = () => {
         );
         setSchedules(updatedSchedules);
         toast.success("Schedule updated successfully");
+
         setIsModalOpen(false);
-        fetchSchedules()
+
+        fetchSchedules();
       }
     } catch (error) {
       toast.error("Error updating schedule");
@@ -147,6 +151,22 @@ const ListSchedule = () => {
   useEffect(() => {
     fetchSchedules();
   }, []);
+
+  const handleAddSeat = () => {
+    setFormData((prevformData) => ({
+      ...prevformData,
+      notAvailableSeats: [
+        ...(prevformData.notAvailableSeats || []), // Nếu là undefined, dùng mảng rỗng
+        { seat_id: "", row: "", price: "" }, // Ghế trống mặc định
+      ],
+    }));
+  };
+
+  const handleRemoveSeat = (index) => {
+    const updatedSeats = [...formData.notAvailableSeats];
+    updatedSeats.splice(index, 1); // Xóa ghế tại vị trí index
+    setFormData({ ...formData, notAvailableSeats: updatedSeats });
+  };
 
   return (
     <div className="p-6">
@@ -248,7 +268,8 @@ const ListSchedule = () => {
                     {schedule.showTime}
                   </td>
                   <td className="px-6 py-4">
-                    {schedule.notAvailableSeats.length > 0 ? (
+                    {schedule.notAvailableSeats &&
+                    schedule.notAvailableSeats.length > 0 ? (
                       <ul className="list-disc pl-4">
                         {schedule.notAvailableSeats.map((seat, seatIndex) => (
                           <li
@@ -294,7 +315,7 @@ const ListSchedule = () => {
         </p>
       )}
 
-        {/* MODAL */}
+      {/* MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
           <div className="bg-white rounded-lg shadow-lg w-96 p-6">
@@ -335,45 +356,93 @@ const ListSchedule = () => {
                 </label>
                 <input
                   type="date"
-                  value={formData.showDate}
+                  value={
+                    new Date(formData.showDate).toISOString().split("T")[0]
+                  }
                   onChange={(e) =>
                     setFormData({ ...formData, showDate: e.target.value })
                   }
                   className="w-full p-2 border border-gray-300 rounded-md"
                 />
-                
               </div>
 
-              {/* Not Available Seats (optional) */}
+              {/* Not Available Seats */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Unavailable Seats
                 </label>
                 <div>
-                {formData.notAvailableSeats && formData.notAvailableSeats.length > 0 ? (
-      <ul className="list-disc pl-5 text-red-600">
-        {formData.notAvailableSeats.map((seat, index) => (
-          <li key={index} className="mb-2">
-            <div className="flex space-x-2">
-              <div>
-<label htmlFor="">Seat </label>
-              <input
-                type="text"
-                className="border p-1 rounded-md w-12"
-                value={seat.seat_id}
-                onChange={(e) => handleSeatChange(e, index, 'seat_id')}
-                placeholder="Seat ID"
-              />
-              </div>
-              
-            </div>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <span className="text-green-600">All seats available</span>
-    )}
-  </div>
+                  {formData.notAvailableSeats &&
+                  formData.notAvailableSeats.length > 0 ? (
+                    <ul className="list-disc pl-5 text-red-600">
+                      {formData.notAvailableSeats.map((seat, index) => (
+                        <li key={index} className="mb-2">
+                          <div className="flex space-x-2">
+                            <div>
+                              <label htmlFor="">Seat </label>
+                              <input
+                                type="text"
+                                className="border p-1 rounded-md w-12"
+                                value={seat.seat_id}
+                                onChange={(e) =>
+                                  handleSeatChange(e, index, "seat_id")
+                                }
+                                placeholder="Seat ID"
+                              />
+                            </div>
+
+                            <div>
+                              <label htmlFor="">Row </label>
+                              <input
+                                type="text"
+                                className="border p-1 rounded-md w-12"
+                                value={seat.row}
+                                onChange={(e) =>
+                                  handleSeatChange(e, index, "row")
+                                }
+                                placeholder="Row"
+                              />
+                            </div>
+
+                            <div>
+                              <label htmlFor="">Price </label>
+                              <input
+                                type="text"
+                                className="border p-1 rounded-md w-12"
+                                value={seat.price}
+                                onChange={(e) =>
+                                  handleSeatChange(e, index, "price")
+                                }
+                                placeholder="Price"
+                              />
+                            </div>
+
+                            {/* Button xóa ghế */}
+                            <button
+                              className="text-red-500 font-semibold pl-4"
+                              onClick={() => handleRemoveSeat(index)}
+                            >
+                              X
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div>
+                      <p className="text-green-600">All seats available</p>
+                    </div>
+                  )}
+
+                  {/* Nút thêm ghế */}
+                  <button
+                    type="button"
+                    className="mt-2 text-blue-500 font-semibold"
+                    onClick={handleAddSeat}
+                  >
+                    Add Seat
+                  </button>
+                </div>
               </div>
 
               {/* Actions */}

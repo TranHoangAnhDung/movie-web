@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema({
-  showtime: String,
+  showTime: String,
   showDate: Date,
   movieId: {
     type: mongoose.Schema.Types.ObjectId,

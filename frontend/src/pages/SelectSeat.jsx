@@ -30,7 +30,7 @@ const SelectSeat = () => {
       );
       const data = await response.json();
       if (data.ok) {
-        // console.log("Fetched screen data:", data.data);
+        console.log("Fetched screen data:", data.data);
         setScreen(data.data);
         setSelectedTime(data.data.movieSchedulesforDate[0]);
       } else {

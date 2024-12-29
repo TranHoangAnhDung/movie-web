@@ -74,7 +74,7 @@ const BuyTickets = () => {
 
       if (data.ok) {
         setTheatres(data.data);
-        // console.log(data.data);
+        console.log(data.data);
       } else {
         console.error(data);
       }
@@ -145,10 +145,10 @@ const BuyTickets = () => {
                       .toISOString()
                       .split("T")[0];
 
-                    return scheduleDate === selectedDateString;
+                    return (scheduleDate === selectedDateString && String(schedule.movieId) === String(movieid));         
                   }
                 );
-                // console.log(filteredSchedules);
+                console.log(filteredSchedules);
 
                 return (
                   <div

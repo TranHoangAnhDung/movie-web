@@ -62,11 +62,6 @@ const SelectSeat = () => {
     }
   };
 
-  useEffect(() => {
-    getSchedules();
-    getMovie();
-  }, []);
-
   const selectDeselectSeat = (seat) => {
     const isSelected = selectedSeats.find(
       (s) =>
@@ -194,6 +189,11 @@ const SelectSeat = () => {
     // Navigate to the Payment page
     navigate(`/payment`, { state: paymentDetails });
   };
+
+  useEffect(() => {
+    getSchedules();
+    getMovie();
+  }, [screenid, date, movieid]);
 
   return (
     <div className="bg-gray-200 min-h-screen w-full">

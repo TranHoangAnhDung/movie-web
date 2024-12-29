@@ -30,47 +30,6 @@ const ListSchedule = () => {
     totalPrice: "",
   });
 
-  const openEditModal = (schedule) => {
-    setSelectedSchedule(schedule); // Lưu thông tin lịch chiếu cần chỉnh sửa
-    setFormData({
-      movieName: schedule.movieName,
-      showTime: schedule.showTime,
-      showDate: schedule.showDate,
-      notAvailableSeats: schedule.notAvailableSeats,
-      screenId: schedule.screenId,
-      totalPrice: schedule.totalPrice,
-    });
-    setIsModalOpen(true);
-  };
-
-  const handleSave = async () => {
-    try {
-      const response = await axios.put(
-        `${backendUrl}/api/movie/screens/${selectedSchedule.screenId}/movie-schedules/${selectedSchedule._id}`,
-       formData, 
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      if (response.data.ok) {
-        // Cập nhật lại dữ liệu sau khi sửa
-        const updatedSchedules = schedules.map((schedule) =>
-          schedule._id === selectedSchedule._id
-            ? { ...schedule, ...formData }
-            : schedule
-        );
-        setSchedules(updatedSchedules);
-        toast.success("Schedule updated successfully");
-
-        setIsModalOpen(false);
-
-        fetchSchedules();
-      }
-    } catch (error) {
-      toast.error("Error updating schedule");
-    }
-  };
-
   const handleDelete = async (scheduleId) => {
     try {
       const response = await axios.delete(
@@ -148,10 +107,6 @@ const ListSchedule = () => {
     setFormData({ ...formData, notAvailableSeats: updatedSeats });
   };
 
-  useEffect(() => {
-    fetchSchedules();
-  }, []);
-
   const handleAddSeat = () => {
     setFormData((prevformData) => ({
       ...prevformData,
@@ -167,6 +122,51 @@ const ListSchedule = () => {
     updatedSeats.splice(index, 1); // Xóa ghế tại vị trí index
     setFormData({ ...formData, notAvailableSeats: updatedSeats });
   };
+
+  const handleSave = async () => {
+    try {
+      const response = await axios.put(
+        `${backendUrl}/api/movie/screens/${selectedSchedule.screenId}/movie-schedules/${selectedSchedule._id}`,
+       formData, 
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      if (response.data.ok) {
+        // Cập nhật lại dữ liệu sau khi sửa
+        const updatedSchedules = schedules.map((schedule) =>
+          schedule._id === selectedSchedule._id
+            ? { ...schedule, ...formData }
+            : schedule
+        );
+        setSchedules(updatedSchedules);
+        toast.success("Schedule updated successfully");
+
+        setIsModalOpen(false);
+
+        fetchSchedules();
+      }
+    } catch (error) {
+      toast.error("Error updating schedule");
+    }
+  };
+
+  const openEditModal = (schedule) => {
+    setSelectedSchedule(schedule); // Lưu thông tin lịch chiếu cần chỉnh sửa
+    setFormData({
+      movieName: schedule.movieName,
+      showTime: schedule.showTime,
+      showDate: schedule.showDate,
+      notAvailableSeats: schedule.notAvailableSeats,
+      screenId: schedule.screenId,
+      totalPrice: schedule.totalPrice,
+    });
+    setIsModalOpen(true);
+  };
+
+  useEffect(() => {
+    fetchSchedules();
+  }, []);
 
   return (
     <div className="p-6">
@@ -382,12 +382,12 @@ const ListSchedule = () => {
                               <label htmlFor="">Seat </label>
                               <input
                                 type="text"
-                                className="border p-1 rounded-md w-12"
+                                className="border p-1 rounded-md w-10"
                                 value={seat.seat_id}
                                 onChange={(e) =>
                                   handleSeatChange(e, index, "seat_id")
                                 }
-                                placeholder="Seat ID"
+                                
                               />
                             </div>
 
@@ -395,12 +395,25 @@ const ListSchedule = () => {
                               <label htmlFor="">Row </label>
                               <input
                                 type="text"
-                                className="border p-1 rounded-md w-12"
+                                className="border p-1 rounded-md w-6"
                                 value={seat.row}
                                 onChange={(e) =>
                                   handleSeatChange(e, index, "row")
                                 }
-                                placeholder="Row"
+                                
+                              />
+                            </div>
+
+                            <div>
+                              <label htmlFor="">Col </label>
+                              <input
+                                type="text"
+                                className="border p-1 rounded-md w-6"
+                                value={seat.col}
+                                onChange={(e) =>
+                                  handleSeatChange(e, index, "col")
+                                }
+                                
                               />
                             </div>
 
@@ -408,12 +421,12 @@ const ListSchedule = () => {
                               <label htmlFor="">Price </label>
                               <input
                                 type="text"
-                                className="border p-1 rounded-md w-12"
+                                className="border p-1 rounded-md w-8"
                                 value={seat.price}
                                 onChange={(e) =>
                                   handleSeatChange(e, index, "price")
                                 }
-                                placeholder="Price"
+                                
                               />
                             </div>
 

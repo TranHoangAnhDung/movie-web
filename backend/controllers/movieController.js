@@ -301,7 +301,7 @@ export const updateSchedule = async (req, res, next) => {
     }
 
     // Lưu lại thay đổi vào Screen
-    screen.movieSchedules[scheduleIndex] = updatedScheduleData;
+    // screen.movieSchedules[scheduleIndex] = updatedScheduleData;
 
     await screen.save();
 

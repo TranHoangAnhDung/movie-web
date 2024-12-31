@@ -3,12 +3,10 @@ import { useLocation, useParams, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-// import DatePicker from "react-horizontal-datepicker";
-
 const BuyTickets = () => {
   const { movieid, city } = useParams(); // Get params using React Router
 
-  const location = useLocation(); // Get the current pathname
+  const location = useLocation();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [movie, setMovie] = useState(null);
@@ -83,7 +81,6 @@ const BuyTickets = () => {
     }
   };
 
-  // Get movie details when the component mounts
   useEffect(() => {
     getMovie();
     getAvailableDates();

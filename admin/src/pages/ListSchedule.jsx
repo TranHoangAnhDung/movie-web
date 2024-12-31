@@ -111,15 +111,15 @@ const ListSchedule = () => {
     setFormData((prevformData) => ({
       ...prevformData,
       notAvailableSeats: [
-        ...(prevformData.notAvailableSeats || []), // Nếu là undefined, dùng mảng rỗng
-        { seat_id: "", row: "", price: "" }, // Ghế trống mặc định
+        ...(prevformData.notAvailableSeats || []), 
+        { seat_id: "", row: "", price: "" }, 
       ],
     }));
   };
 
   const handleRemoveSeat = (index) => {
     const updatedSeats = [...formData.notAvailableSeats];
-    updatedSeats.splice(index, 1); // Xóa ghế tại vị trí index
+    updatedSeats.splice(index, 1); 
     setFormData({ ...formData, notAvailableSeats: updatedSeats });
   };
 
@@ -432,6 +432,7 @@ const ListSchedule = () => {
 
                             {/* Button xóa ghế */}
                             <button
+                            type="button"
                               className="text-red-500 font-semibold pl-4"
                               onClick={() => handleRemoveSeat(index)}
                             >

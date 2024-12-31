@@ -6,8 +6,8 @@ const movieSchema = new mongoose.Schema({
   portraitImgUrl: String,
   landscapeImgUrl: String,
   rating: Number,
-  genre: [String], // You can store multiple genres as an array of strings
-  duration: Number, // Duration in minutes
+  genre: [String], 
+  duration: Number, 
   cast: [
     {
       celebName: String,

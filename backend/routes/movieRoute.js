@@ -6,6 +6,7 @@ import {
   bookTicket,
   createMovie,
   createScreen,
+  getAllBookings,
   getAvailableDates,
   getMovies,
   getMoviesId,
@@ -32,6 +33,8 @@ const Router = express.Router();
   /* ADMIN ACCESS */
 }
 Router.route("/movieschedules").get(getSchedules);
+Router.route("/getbookings").get(authAdminToken, getAllBookings)
+Router.route("/screensbycity/:city").get(getScreensByCity);
 
 Router.route("/createmovie").post(authAdminToken, createMovie);
 Router.route("/createscreen").post(authAdminToken, createScreen);
@@ -56,7 +59,6 @@ Router.route("/bookticket").post(authToken, bookTicket);
 
 Router.route("/movies").get(getMovies);
 Router.route("/movies/:id").get(getMoviesId);
-Router.route("/screensbycity/:city").get(getScreensByCity);
 Router.route("/screensbymovieschedule/:city/:date/:movieid").get(
   getScreensByMoviesSchedule
 );

@@ -1,5 +1,3 @@
-import { mongoose } from "mongoose";
-
 import MovieModel from "../model/Movie.js";
 import ScreenModel from "../model/Screen.js";
 import AccountModel from "../model/Account.js";
@@ -249,15 +247,13 @@ export const updateSchedule = async (req, res, next) => {
       return res.status(404).json({ message: "Movie schedule not found" });
     }
 
-    // Giữ lại movieId và chỉ cập nhật các trường cần thiết
     const scheduleToUpdate = screen.movieSchedules[scheduleIndex];
 
     const updatedScheduleData = {
-      ...scheduleToUpdate, // Giữ lại dữ liệu cũ
-      ...updatedSchedule, // Cập nhật các trường mới từ frontend
+      ...scheduleToUpdate, 
+      ...updatedSchedule,
     };
-
-    // Đảm bảo movieId không bị mất
+    
     updatedScheduleData.movieId = scheduleToUpdate.movieId;
 
     // Cập nhật lại phần unavailable seats
@@ -274,12 +270,11 @@ export const updateSchedule = async (req, res, next) => {
     });
 
     for (const booking of bookings) {
-      // Đồng bộ các trường liên quan
       booking.showTime = updatedSchedule.showTime 
       booking.showDate = updatedSchedule.showDate 
       booking.movieTitle = updatedSchedule.movieName 
       booking.screenName = screen.name 
-      booking.seats = updatedSchedule.notAvailableSeats; // chỉnh sửa từ khúc này
+      booking.seats = updatedSchedule.notAvailableSeats;
 
       booking.seats = booking.seats.map((seat) => {
         const updatedSeat = updatedSchedule.notAvailableSeats.find(
@@ -299,9 +294,6 @@ export const updateSchedule = async (req, res, next) => {
 
       await booking.save();
     }
-
-    // Lưu lại thay đổi vào Screen
-    // screen.movieSchedules[scheduleIndex] = updatedScheduleData;
 
     await screen.save();
 
@@ -336,9 +328,40 @@ export const removeSchedule = async (req, res, next) => {
   }
 };
 
-export const removeUnavailableSeats = async (req, res, next) => {
+export const getAllBookings = async (req, res, next) => {
   try {
-  } catch (error) {}
+    const bookings = await BookingModel.find()
+      .populate("userId", "name email") 
+      .populate("screenId", "name location") 
+
+    res.status(200).json({
+      ok: true,
+      message: "Bookings retrieved successfully",
+      data: bookings,
+    });
+  } catch (error) {
+    res.status(500).json({ ok: false, message: error.message });
+  }
+};
+
+export const getScreensByCity = async (req, res, next) => {
+  //:city
+  const city = req.params.city;
+
+  try {
+    const screens = await ScreenModel.find({ city });
+    if (!screens || screens.length === 0) {
+      return res.status(404).json("No screens found in the specified city");
+    }
+
+    res.status(200).json({
+      ok: true,
+      data: screens,
+      message: "Cinemas retrieved successfully",
+    });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
 };
 
 /* USER ACCESS */
@@ -475,26 +498,6 @@ export const getMoviesId = async (req, res, next) => {
   }
 };
 
-export const getScreensByCity = async (req, res, next) => {
-  //:city
-  const city = req.params.city;
-
-  try {
-    const screens = await ScreenModel.find({ city });
-    if (!screens || screens.length === 0) {
-      return res.status(404).json("No screens found in the specified city");
-    }
-
-    res.status(200).json({
-      ok: true,
-      data: screens,
-      message: "Cinemas retrieved successfully",
-    });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
-};
-
 export const getScreensByMoviesSchedule = async (req, res, next) => {
   // /:city/:date/:movieid
   try {
@@ -511,7 +514,6 @@ export const getScreensByMoviesSchedule = async (req, res, next) => {
     let temp = [];
     // Filter screens based on the showDate
     const filteredScreens = screens.forEach((screen) => {
-      // screen
 
       screen.movieSchedules.forEach((schedule) => {
         let showDate = new Date(schedule.showDate);
@@ -525,9 +527,8 @@ export const getScreensByMoviesSchedule = async (req, res, next) => {
         ) {
           // Make sure screenId is included in the response
           if (!temp.some((s) => s._id.toString() === screen._id.toString())) {
-            temp.push(screen); // Push screen only once
+            temp.push(screen); 
           }
-          // temp.push(screen);
         }
       });
     });
@@ -592,8 +593,8 @@ export const getUserBookings = async (req, res, next) => {
     let bookings = [];
 
     for (let i = 0; i < user.bookings.length; i++) {
-      let bookingobj = await BookingModel.findById(user.bookings[i]._id);
-      bookings.push(bookingobj);
+      let bookingObj = await BookingModel.findById(user.bookings[i]._id).populate("screenId", "name location");
+      bookings.push(bookingObj);
     }
 
     res.status(200).json({

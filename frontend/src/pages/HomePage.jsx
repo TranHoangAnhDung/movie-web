@@ -28,9 +28,7 @@ const HomePage = () => {
   return (
     <>
       <Banner />
-      
-        {/* <MovieList title={"Phim Hot"} data={movie} />
-        <MovieList title={"Phim Đề Cử"} data={movieRate} /> */}
+        <div>On Showing Movies</div>
         <MovieList />
       
     </>

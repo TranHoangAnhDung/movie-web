@@ -4,14 +4,6 @@ import "react-multi-carousel/lib/styles.css";
 
 import MovieCard from "./MovieCard";
 
-// import PropTypes from "prop-types";
-// import MovieListAPI from "../../api/movieListAPI";
-// import MovieTrailerPopUp from "./MovieTrailer";
-// import {Swiper, SwiperSlide} from "swiper/react"
-// import {Pagination} from "swiper/modules"
-// import "swiper/css"
-// import "swiper/css/pagination"
-
 const MovieList = () => {
   const [user, setUser] = useState(null);
   const [movies, setMovies] = useState([]);
@@ -100,12 +92,6 @@ const MovieList = () => {
           
           </Carousel>
 
-          {/* Show All Button */}
-          <div className="flex justify-center my-7">
-            <button className="rounded-md bg-red-500 py-2 px-6 text-white text-sm font-semibold shadow-md hover:bg-red-600 transition-all">
-              Show More
-            </button>
-          </div>
         </>
       )}
     </div>

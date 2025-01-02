@@ -3,11 +3,11 @@ import { NavLink } from "react-router-dom";
 import image from "../assets/movie-icon.jpg";
 
 const Sidebar = () => {
-  const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
+  const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
   const [isListsOpen, setIsListsOpen] = useState(false);
 
-  const toggleAddMenu = () => {
-    setIsAddMenuOpen(!isAddMenuOpen);
+  const toggleUserManagement = () => {
+    setIsUserManagementOpen(!isUserManagementOpen);
   };
 
   const toggleLists = () => {
@@ -20,7 +20,7 @@ const Sidebar = () => {
         {/* Users Management Section */}
         <div className="flex flex-col gap-3">
           <button
-            onClick={toggleAddMenu}
+            onClick={toggleUserManagement}
             className="flex items-center gap-3 border border-gray-300 border-r-0 px-3 py-2 rounded-l"
           >
             <img className="w-5 h-5" src={image} alt="" />
@@ -28,7 +28,7 @@ const Sidebar = () => {
           </button>
 
           {/* Collapsible Management Items */}
-          {isAddMenuOpen && (
+          {isUserManagementOpen && (
             <div className="flex flex-col gap-3 ml-4">
               <NavLink
                 to="/bookings"

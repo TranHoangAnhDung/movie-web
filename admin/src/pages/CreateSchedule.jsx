@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 import image from "../assets/rating.png";
 import { backendUrl } from "../App";
@@ -19,15 +20,14 @@ const CreateSchedule = () => {
 
   const getMovies = async () => {
     try {
-      const response = await fetch(`${backendUrl}/api/movie/movies`);
+      const response = await axios.get(`${backendUrl}/api/movie/movies`);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch movies");
+      if (response.data.ok) {
+        setMovies(response.data.data);
+        console.log(response.data.data);
+      }else {
+        toast.error("Failed to fetch movies");
       }
-      const data = await response.json();
-      setMovies(data.data);
-
-      console.log(data.data);
     } catch (error) {
       console.error("Error fetching movies:", error);
     }
@@ -40,14 +40,21 @@ const CreateSchedule = () => {
   const getScreensByCity = async () => {
     if (city === "") return toast.error("Please select a city");
 
-    const response = await fetch(
+    try {
+    const response = await axios.get(
       `${backendUrl}/api/movie/screensbycity/${city}`
     );
 
-    const data = await response.json();
-    setScreens(data.data);
-
-    console.log(data.data);
+    if (response.data.ok) {
+      setScreens(response.data.data);  
+      console.log(response.data.data); 
+    } else {
+      toast.error("No data found for the selected city");
+    }
+  } catch (error) {
+    console.error("Error fetching screens:", error);
+    toast.error("Error fetching screens");
+  }
   };
 
   const createSchedule = async () => {
@@ -62,26 +69,27 @@ const CreateSchedule = () => {
       return;
     }
 
-    const response = await fetch(
+try {
+    const response = await axios.post(
       `${backendUrl}/api/movie/addmoviescheduletoscreen`,
+      schedule,
       {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(schedule),
       }
     );
 
-    const data = await response.json();
-
-    console.log(data);
-    if (data.ok) {
+    if (response.data.ok) {
       toast.success("Schedule created successfully");
     } else {
       toast.error("Schedule creation failed");
     }
+  } catch (error) {
+    console.error("Error creating schedule:", error);
+    toast.error("Error creating schedule");
+  }
   };
 
   return (

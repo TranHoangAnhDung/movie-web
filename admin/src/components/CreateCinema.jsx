@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 import { backendUrl } from "../App";
 
@@ -348,27 +349,25 @@ const CreateCinemaPage = ({setShowAddCinema}) => {
         return;
       }
 
-      const response = await fetch(
+      const response = await axios.post(
         `${backendUrl}/api/movie/createscreen`,
+        screen,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(screen),
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Screen creation successful", data);
+      if (response.data.ok) {
+        console.log("Screen creation successful", response.data);
         setShowAddCinema(false)
         toast.success("Screen Created Successfully", {
           position: "top-center",
         });
       } else {
-        console.error("Screen creation failed", response.statusText);
+        console.error("Screen creation failed", response.data.message);
         toast.error("Screen Creation Failed", {
           position: "top-center",
         });

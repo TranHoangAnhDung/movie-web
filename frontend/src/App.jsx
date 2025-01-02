@@ -12,7 +12,7 @@ import About from "./components/homepage/About";
 import Contact from "./components/homepage/Contact";
 import ScrollTopTop from "./components/detailmoviepage/ScrollToTop";
 
-
+export const backendUrl = import.meta.env.VITE_BACKEND_URL
 
 function App() {
   const [userName, setUserName] = useState(null)

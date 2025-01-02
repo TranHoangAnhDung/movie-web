@@ -8,6 +8,7 @@ import {
   createScreen,
   getAllBookings,
   getAvailableDates,
+  getMovieBySearch,
   getMovies,
   getMoviesId,
   getScheduleByMovies,
@@ -15,7 +16,6 @@ import {
   getScreensByCity,
   getScreensByMoviesSchedule,
   getUserBookings,
-  getUserBookingsId,
   removeMovie,
   removeSchedule,
   removeScreen,
@@ -66,7 +66,7 @@ Router.route("/schedulebymovie/:screenid/:date/:movieid").get(
   getScheduleByMovies
 );
 Router.route("/getuserbookings").get(authToken, getUserBookings);
-Router.route("/getuserbookings/:id").get(authToken, getUserBookingsId);
 Router.route("/getavailabledates/:city/:movieid").get(getAvailableDates);
+Router.route("/search/:keyword").get(authToken, getMovieBySearch)
 
 export default Router;

@@ -217,7 +217,7 @@ const ListMovies = () => {
                     ))}
                   </td>
 
-                  <td className="px-6 py-4">{item.duration}</td>
+                  <td className="px-6 py-4">{item.duration} (mins)</td>
 
                   <td className="px-6 py-[50%] flex flex-row gap-7">
                     <img
@@ -261,7 +261,7 @@ const ListMovies = () => {
                 type="text"
                 name="title"
                 placeholder="Title"
-                value={updatedMovie.title || ""}
+                value={updatedMovie.title}
                 onChange={handleInputChange}
                 className="w-full mb-2 p-2 border rounded-md"
               />
@@ -272,7 +272,7 @@ const ListMovies = () => {
               <input
                 name="genre"
                 placeholder="Genre"
-                value={updatedMovie.genre || ""}
+                value={updatedMovie.genre}
                 onChange={handleInputChange}
                 className="w-full mb-2 p-2 border rounded-md"
               />
@@ -285,7 +285,7 @@ const ListMovies = () => {
                 type="number"
                 name="rating"
                 placeholder="Rating"
-                value={updatedMovie.rating || ""}
+                value={updatedMovie.rating}
                 onChange={handleInputChange}
                 className="w-full mb-2 p-2 border rounded-md"
               />
@@ -297,7 +297,7 @@ const ListMovies = () => {
                 type="number"
                 name="duration"
                 placeholder="Duration"
-                value={updatedMovie.duration || ""}
+                value={updatedMovie.duration}
                 onChange={handleInputChange}
                 className="w-full mb-2 p-2 border rounded-md"
               />

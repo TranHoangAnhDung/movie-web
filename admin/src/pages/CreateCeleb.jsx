@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
+
+import { backendUrl } from "../App";
 
 const CreateCeleb = () => {
   const [celeb, setCeleb] = useState({
@@ -34,14 +37,12 @@ const CreateCeleb = () => {
       const formData = new FormData();
       formData.append("myimage", image);
 
-      const response = await fetch("http://localhost:8080/image/uploadimage", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(`${backendUrl}/image/uploadimage`,
+        formData
+      );
 
-      if (response.ok) {
-        const data = await response.json();
-        return data.imageUrl; // Return the uploaded image URL
+      if (response.data.ok) {
+        return response.data.imageUrl; // Return the uploaded image URL
       } else {
         toast.error("Failed to upload the image");
         return null;
@@ -77,18 +78,16 @@ const CreateCeleb = () => {
         movieId: celeb.movieId,
       };
 
-      const adminToken = localStorage.getItem("token");
-
-      const response = await fetch("http://localhost:8080/api/movie/addceleb", {
-        method: "POST",
+      const response = await axios.post(`${backendUrl}/api/movie/addceleb`, 
+        newCeleb,
+        {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${adminToken}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(newCeleb),
       });
 
-      if (response.ok) {
+      if (response.data.ok) {
         toast.success("Celebrity added successfully!");
         setCeleb({
           celebName: "",

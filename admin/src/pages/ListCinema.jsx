@@ -53,8 +53,6 @@ const ListCinema = () => {
 
   const handleSaveEdit = async () => {
     try {
-      console.log(editScreen);
-
       const response = await axios.put(
         `${backendUrl}/api/movie/updatescreen/${editScreen._id}`,
         editScreen,
@@ -161,13 +159,12 @@ const ListCinema = () => {
                   </td>
 
                   {/* Button */}
-                  <td className="pl-3 py-[100%] flex flex-row gap-7">
+                  <td className="pl-3 py-[100%] flex flex-row gap-6">
                     <img
                       src={image}
                       onClick={() => handleEdit(screen)}
                       className="cursor-pointer text-white hover:text-blue-700 w-5"
                     />
-
                     <span
                       onClick={() => removeScreen(screen._id)}
                       className="cursor-pointer text-red-500 hover:text-red-700"
@@ -194,7 +191,7 @@ const ListCinema = () => {
             >
               X
             </button>
-            <CreateCinemaPage setShowAddCinema={setShowAddCinema}/>
+            <CreateCinemaPage setShowAddCinema={setShowAddCinema} />
           </div>
         </div>
       )}

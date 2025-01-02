@@ -1,5 +1,4 @@
 import React from "react";
-import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,8 @@ const MovieCard = (data) => {
     <div
       className="overflow-hidden shadow-lg flex flex-col gap-10 mb-4 relative cursor-pointer transform transition-transform duration-300 w-full group"
       onClick={() => {
-        navigate(`/${city}/movies/${_id}`); // Navigate programmatically
+        navigate(`/${city}/movies/${_id}`)
+        window.scrollTo({top: 0, behavior: "smooth"});
       }}
     >
       <div className="relative w-full px-8">
@@ -51,50 +51,5 @@ const MovieCard = (data) => {
     </div>
   );
 };
-
-// const MovieCard = ({ data, handleTrailer, title }) => {
-//   const responsive = {
-//     superLargeDesktop: {
-//       breakpoint: { max: 4000, min: 3000 },
-//       items: 8,
-//     },
-//     desktop: {
-//       breakpoint: { max: 3000, min: 1200 },
-//       items: 6,
-//     },
-//     tablet: {
-//       breakpoint: { max: 1200, min: 600 },
-//       items: 4,
-//     },
-//     mobile: {
-//       breakpoint: { max: 600, min: 0 },
-//       items: 1,
-//     },
-//   };
-//   return (
-//     <>
-//       <h2 className="uppercase text-3xl font-bold mb-4">{title}</h2>
-//       <Carousel responsive={responsive} className="flex items-center space-x-4">
-//         {data.length > 0 &&
-//           data.map((item) => (
-//             <div
-//               key={item.id}
-//               className="w-[200px] h-[300px] relative group hover:cursor-pointer"
-//               onClick={() => handleTrailer(item)}
-//             >
-//               <div className="group-hover:scale-105 transition-transform duration-500 ease-in-out w-full h-full">
-//                 {/* <div className="absolute top-0 left-0 w-full h-full bg-black/40"></div> */}
-//                 <img
-//                   src={`${import.meta.env.VITE_IMG_URL}${item.poster_path}`}
-//                   alt={item.title}
-//                   className="w-full h-full object-cover"
-//                 />
-//               </div>
-//             </div>
-//           ))}
-//       </Carousel>
-//     </>
-//   );
-// };
 
 export default MovieCard;

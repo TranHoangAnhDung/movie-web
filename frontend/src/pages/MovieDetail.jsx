@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import MovieListAPI from "../api/movieListAPI";
-import BannerInfoMovie from "../components/detailmoviepage/BannerInfoMovie";
-import MovieDetailInfo from "../components/detailmoviepage/MovieDetailInfo";
-import BackToPrePage from "../components/detailmoviepage/BackToPrePage";
-import Loading from "../components/loading/Loading";
+import { BsFillStarFill } from "react-icons/bs";
+import axios from "axios";
 
-import { BsShare, BsFillStarFill } from "react-icons/bs";
-import MovieList from "../components/homepage/MovieList";
-import CelebCard from "../components/detailmoviepage/CelebCard";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
+
+import { backendUrl } from "../App";
+
+import MovieList from "../components/homepage/MovieList";
+import CelebCard from "../components/detailmoviepage/CelebCard";
 
 const MovieDetail = () => {
   const { movieid, city } = useParams(); // Get movie ID from URL
@@ -22,20 +21,18 @@ const MovieDetail = () => {
 
   const getMovie = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/movie/movies/${movieid}`,
+      const response = await axios.get(
+        `${backendUrl}/api/movie/movies/${movieid}`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      const data = await response.json();
-      if (data.ok) {
-        setMovie(data.data);
+      if (response.data.ok) {
+        setMovie(response.data.data);
       } else {
-        console.error("Failed to fetch movie data:", data.message);
+        console.error("Failed to fetch movie data:", response.data.message);
       }
     } catch (err) {
       console.error("Error fetching movie:", err);
@@ -134,8 +131,8 @@ const MovieDetail = () => {
                   {movie.cast.map((cast, index) => (
                     <SwiperSlide key={index}>
                       <CelebCard
-                        imageUrl={cast.celebImage} // Map the schema field `celebImage` to `imageUrl`
-                        name={cast.celebName} // Map the schema field `celebName` to `name`
+                        imageUrl={cast.celebImage} 
+                        name={cast.celebName}
                         role={cast.celebRole}
                       />
                     </SwiperSlide>
@@ -155,62 +152,5 @@ const MovieDetail = () => {
     </>
   );
 };
-// const MovieDetail = () => {
-//   const [movie, setMovie] = useState([]);
-//   const [videos, setVideos] = useState([]);
-//   const [casts, setCasts] = useState([]);
-//   const [recommendMovie, setRecommendMovie] = useState([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const param = useParams();
-//   const { movieID } = param;
-
-//   useEffect(() => {
-//     window.scrollTo(0, 0);
-//     const fetchDataMovie = async () => {
-//       try {
-//         setIsLoading(true);
-//         const [dataMovie, dataVideos, dataCasts, dataRecommend] =
-//           await Promise.all([
-//             MovieListAPI.getDetailMovie(movieID),
-//             MovieListAPI.getVideoTrailer(movieID),
-//             MovieListAPI.getCasts(movieID),
-//             MovieListAPI.getRecommendations(movieID),
-//           ]);
-//         setMovie(dataMovie);
-//         setVideos(dataVideos.results);
-//         setCasts(dataCasts.cast);
-//         setRecommendMovie(dataRecommend.results);
-//       } catch (error) {
-//         console.log(error.message);
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-//     fetchDataMovie();
-//   }, [movieID]);
-
-//   // Hàm xử lý click vào video
-//   const onVideoClick = (key) => {
-//     window.open(`https://www.youtube.com/watch?v=${key}`, "_blank");
-//   };
-
-//   return isLoading ? (
-//     <div className="text-white flex items-center justify-center py-10 mb-40">
-//       <Loading />
-//     </div>
-//   ) : (
-//     <div className="">
-//       {/* Cập nhật dòng này */}
-//       <BannerInfoMovie data={movie} videos={videos} />
-//       <MovieDetailInfo
-//         data={videos}
-//         movies={recommendMovie}
-//         casts={casts}
-//         onVideoClick={onVideoClick} // Truyền hàm vào đây
-//       />
-//       <BackToPrePage />
-//     </div>
-//   );
-// };
 
 export default MovieDetail;

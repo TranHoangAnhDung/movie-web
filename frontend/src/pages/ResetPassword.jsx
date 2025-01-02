@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+
+import { backendUrl } from "../App";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -12,7 +15,7 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      alert("Passwords do not match!");
+      toast.warn("Passwords do not match!");
       return;
     }
 
@@ -21,18 +24,18 @@ const ResetPassword = () => {
     try {
       // Gửi yêu cầu reset password đến API backend
       const response = await axios.post(
-        "http://localhost:8080/api/auth/reset-password",
+        `${backendUrl}/api/auth/reset-password`,
         { token: resetToken, newPassword: newPassword }
       );
 
-      alert(response.data); // Thông báo thành công
-      navigate("/login"); // Chuyển hướng về trang Login
+      toast.success(response.data);
+      navigate("/login"); 
     } catch (error) {
       console.error(error);
       if (error.response?.status === 400) {
-        alert("Invalid or expired token. Please request a new one.");
+        toast.warn("Invalid or expired token. Please request a new one.");
       } else {
-        alert("An error occurred. Please try again later.");
+        toast.error("An error occurred. Please try again later.");
       }
     }
   };

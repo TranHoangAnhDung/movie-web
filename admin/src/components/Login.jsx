@@ -1,43 +1,77 @@
 import React, { useState } from "react";
-import {toast} from "react-toastify"
-import axios from "axios"
+import { toast } from "react-toastify";
+import axios from "axios";
 
 import { backendUrl } from "../App";
 
-const Login = ({setToken}) => {
+const Login = ({ setToken }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+  const [name, setName] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
 
+  const onSumitHandle = async (e) => {
+    e.preventDefault();
 
-    const onSumitHandle = async (e) => {
-        try {
-            e.preventDefault()
-            
-            const response = await axios.post(backendUrl + "/admin/login", {email, password})
-            if (response.data.success) {
-                setToken(response.data.adminAuthToken)
-            } else {
-                toast.error(response.data.message)
-            }
-        } catch (error) {
-            console.log(error);
-            toast.error(error.message)
+    try {
+      if (isRegister) {
+        const response = await axios.post(`${backendUrl}/admin/register`, {
+          name,
+          email,
+          password,
+        });
+
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setIsRegister(false);
+        } else {
+          toast.error(response.data.message);
         }
+      } else {
+        const response = await axios.post(`${backendUrl}/admin/login`, {
+          email,
+          password,
+        });
+        if (response.data.success) {
+          setToken(response.data.adminAuthToken);
+        } else {
+          toast.error(response.data.message);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center w-full">
       <div className="bg-white shadow-md rounded-lg px-8 py-6 max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          {isRegister ? "Admin Register" : "Admin Login"}
+        </h1>
         <form onSubmit={onSumitHandle}>
+          {isRegister && (
+            <div className="mb-3 min-w-72">
+              <p className="text-sm font-medium text-gray-700 mb-2">Name</p>
+              <input
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+                className="rounded-md w-full px-3 py-2 border border-gray-300 outline-none"
+                type="text"
+                placeholder="Enter your name"
+                required
+              />
+            </div>
+          )}
           <div className="mb-3 min-w-72">
             <p className="text-sm font-medium text-gray-700 mb-2">
               Email Address
             </p>
             <input
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
               className="rounded-md w-full px-3 py-2 border border-gray-300 outline-none"
               type="email"
               placeholder="your@email.com"
@@ -47,16 +81,32 @@ const Login = ({setToken}) => {
           <div className="mb-3 min-w-72">
             <p className="text-sm font-medium text-gray-700 mb-2">Password</p>
             <input
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
               className="rounded-md w-full px-3 py-2 border border-gray-300 outline-none"
               type="password"
               placeholder="Enter your password"
               required
             />
           </div>
-          <button className="mt-2 w-full py-2 px-4 rounded-md text-white bg-black" type="sumit"> Login </button>
+          <button
+            className="mt-2 w-full py-2 px-4 rounded-md text-white bg-black"
+            type="sumit"
+          >
+            {isRegister ? "Register" : "Login"}
+          </button>
         </form>
+        <p className="mt-4 text-sm text-gray-500 text-center">
+          {isRegister
+            ? "Already have an account? "
+            : "Don't have an account yet? "}
+          <button
+            onClick={() => setIsRegister(!isRegister)}
+            className="text-blue-500 font-medium"
+          >
+            {isRegister ? "Login" : "Register"}
+          </button>
+        </p>
       </div>
     </div>
   );

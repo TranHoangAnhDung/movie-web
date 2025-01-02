@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import axios from "axios";
 
 import MovieCard from "./MovieCard";
+import {backendUrl} from "../../App"
 
 const MovieList = () => {
   const [user, setUser] = useState(null);
@@ -10,35 +12,32 @@ const MovieList = () => {
 
   const getUser = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/getuser", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const response = await axios.get(`${backendUrl}/api/auth/getuser`, {
+          headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }
       });
-      const data = await response.json();
-      if (data.ok) {
-        setUser(data.data); // Update user state with fetched data
+      if (response.data.ok) {
+          setUser(response.data.data); 
       } else {
-        window.location.href = "/Login"; // Redirect if user isn't logged in
+          window.location.href = "/Login";
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Error fetching user:", error);
-    }
+      window.location.href = "/Login"; 
+  }
   };
 
   const getMovies = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/movie/movies", {
-        method: "GET",
+      const response = await axios.get(`${backendUrl}/api/movie/movies`, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const data = await response.json();
-      if (data.ok) {
-        setMovies(data.data); // Update movies state with fetched data
+      if (response.data.ok) {
+        setMovies(response.data.data);
       }
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -83,68 +82,19 @@ const MovieList = () => {
             containerClass="carousel-container"
             itemClass="carousel-item-padding-40-px"
           >
-            
-              {movies.map((Movie) => (
-                <div key={Movie._id} className="flex flex-row justify-between gap-4">
-                  <MovieCard Movie={Movie} user={user} />
-                </div>
-              ))}
-          
+            {movies.map((Movie) => (
+              <div
+                key={Movie._id}
+                className="flex flex-row justify-between gap-4"
+              >
+                <MovieCard Movie={Movie} user={user} />
+              </div>
+            ))}
           </Carousel>
-
         </>
       )}
     </div>
   );
 };
-
-// const MovieList = ({ title, data }) => {
-//   const [modalIsOpen, setModalIsOpen] = useState(false);
-//   const [selectMovie, setSelectMovie] = useState({});
-//   const [trailerKey, setTrailerKey] = useState("");
-
-//   const handleTrailer = async (movie) => {
-//     try {
-//       //call api get data
-//       const videos = await MovieListAPI.getVideoTrailer(movie.id);
-//       //set data to State
-//       const videoTrailer = videos.results.find(
-//         (trailer) =>
-//           trailer.type === "Trailer" || trailer.type === "Original Trailer"
-//       );
-//       setSelectMovie(movie);
-//       setTrailerKey(videoTrailer.key);
-//       //open video
-//       setModalIsOpen(true);
-//     } catch (error) {
-//       //catch error
-//       setModalIsOpen(false);
-//       console.log(error);
-//     }
-//   };
-//   //handle Click button detail
-//   const handleClickBtnDetail = () => {
-//     setModalIsOpen(false);
-//   }
-//   return (
-//     <div className="text-white mb-10">
-//       {/* //Show movie */}
-//       <MovieCard handleTrailer={handleTrailer} data={data} title={title} />
-//       {/* //Pop up trailer */}
-//       <MovieTrailerPopUp
-//         modalIsOpen={modalIsOpen}
-//         selectMovie={selectMovie}
-//         trailerKey={trailerKey}
-//         setModalIsOpen={setModalIsOpen}
-//         handleClickBtnDetail={handleClickBtnDetail}
-//       />
-//     </div>
-//   );
-// };
-
-// MovieList.propTypes = {
-//   title: PropTypes.string,
-//   data: PropTypes.array,
-// };
 
 export default MovieList;

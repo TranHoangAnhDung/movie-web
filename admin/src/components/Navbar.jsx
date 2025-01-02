@@ -1,7 +1,5 @@
 import React from "react";
 
-import image from "../assets/movie-icon.jpg";
-
 const Navbar = ({ setToken }) => {
   return (
     <>

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Payment from "./Payment";
+import axios from "axios";
+
+import { backendUrl } from "../App";
 
 const SelectSeat = () => {
   const { movieid, city, screenid } = useParams();
@@ -19,20 +21,18 @@ const SelectSeat = () => {
 
   const getSchedules = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/movie/schedulebymovie/${screenid}/${date}/${movieid}`,
+      const response = await axios.get(
+        `${backendUrl}/api/movie/schedulebymovie/${screenid}/${date}/${movieid}`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      const data = await response.json();
-      if (data.ok) {
-        console.log("Fetched screen data:", data.data);
-        setScreen(data.data);
-        setSelectedTime(data.data.movieSchedulesforDate[0]);
+      if (response.data.ok) {
+        // console.log("Fetched screen data:", response.data.data);
+        setScreen(response.data.data);
+        setSelectedTime(response.data.data.movieSchedulesforDate[0]);
       } else {
         console.error(data);
       }
@@ -43,19 +43,17 @@ const SelectSeat = () => {
 
   const getMovie = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/movie/movies/${movieid}`,
+      const response = await axios.get(
+        `${backendUrl}/api/movie/movies/${movieid}`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      const data = await response.json();
-      if (data.ok) {
-        console.log("movie", data.data);
-        setMovie(data.data);
+      if (response.data.ok) {
+        console.log("movie", response.data.data);
+        setMovie(response.data.data);
       }
     } catch (err) {
       console.error(err);
@@ -125,7 +123,7 @@ const SelectSeat = () => {
                                   s.seat_id === seat.seat_id &&
                                   s.col === colIndex
                               ) ? (
-                                <span className="text-gray-400 bg-gray-300 cursor-not-allowed w-8 h-8 flex justify-center items-center mr-3 rounded-lg shadow-md">
+                                <span className="text-gray-400 bg-gray-300 cursor-not-allowed w-9 h-9 flex justify-center items-center mr-3 rounded-lg shadow-md">
                                   {row.rowname}
                                   {adjustedSeatIndex + 1}
                                 </span>
@@ -200,10 +198,10 @@ const SelectSeat = () => {
       {movie && screen && (
         <div className="bg-white">
           <div className="bg-col2 p-4">
-            <h1 className="text-white text-2xl font-semibold">
-              {movie.title} - {screen?.screen?.name}
+            <h1 className="text-black text-2xl font-semibold py-4">
+              {movie.title} - {screen.screen.name}
             </h1>
-            <h3 className="text-gray-600 text-sm font-semibold border border-gray-400 py-1 px-5 rounded-full w-max-content">
+            <h3 className="text-gray-600 text-sm font-semibold border border-gray-400 py-1 px-5 rounded-full w-[15%]">
               {movie.genre.join(" / ")}
             </h3>
           </div>

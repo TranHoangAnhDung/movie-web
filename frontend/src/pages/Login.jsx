@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
+import {toast} from "react-toastify"
+
+import {backendUrl} from "../App"
 
 const Login = ({setUserName}) => {
   const [name, setName] = useState();
@@ -17,8 +20,8 @@ const Login = ({setUserName}) => {
 
     if (forgotPassword) {
       try {
-        const response = await axios.post("http://localhost:8080/api/auth/forgot-password", {email})
-        alert("Password reset email sent successfully!")
+        const response = await axios.post(`${backendUrl}/api/auth/forgot-password`, {email})
+        toast.success("Password reset email sent successfully!")
         
         // Lấy token từ phản hồi của backend
         const resetToken = response.data.token // Lấy token từ dữ liệu phản hồi
@@ -29,13 +32,13 @@ const Login = ({setUserName}) => {
         setForgotPassword(false); // Quay lại trạng thái Login
 
       } catch (error) {
-        alert("Failed to send password reset email")
+        toast.error("Failed to send password reset email")
       }
     } else {
       const url =
         currentState === "Login"
-          ? "http://localhost:8080/api/auth/login"
-          : "http://localhost:8080/api/auth/register";
+          ? `${backendUrl}/api/auth/login`
+          : `${backendUrl}/api/auth/register`;
   
       const data =
         currentState === "Login"
@@ -46,26 +49,26 @@ const Login = ({setUserName}) => {
         const response = await axios.post(url, data);
         
         if (currentState === "Login") {
-          // Khi login thành công, lưu token vào localStorage và điều hướng
+          // Khi login thành công, lưu token vào localStorage 
           localStorage.setItem("token", response.data.token)
           localStorage.setItem("userName", response.data.name)
-          setUserName(response.data.name)       // Lưu tên người dùng
-          navigate("/")       // Điều hướng đến trang Home
+          setUserName(response.data.name)       
+          navigate("/")       
           window.location.reload();
   
         } else {
-          alert("Registered successfully!")
+          toast.success("Registered successfully!")
           setCurrentState("Login")
         }
       } catch (error) {
         if (error.response && error.response.status === 400) {
           if (error.response.data === "Email already exists") {
-            alert("This Email Already Exists")
+            toast.warn("This Email Already Exists")
           } else {
-            alert("An error occurred")
+            toast.error("An error occurred")
           }
         } else {
-          alert("An error occurred")
+          toast.error("An error occurred")
         }
         console.log(error);
       }

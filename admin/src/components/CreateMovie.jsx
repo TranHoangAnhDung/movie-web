@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 import image from "../assets/upload.jpg";
 import { backendUrl } from "../App";
@@ -81,15 +82,16 @@ const CreateMoviePage = ({onMovieAdded}) => {
       const formData = new FormData();
       formData.append("myimage", image);
 
-      const response = await fetch(`${backendUrl}/image/uploadimage`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await axios.post(`${backendUrl}/image/uploadimage`,
+        formData, 
+        {
+          headers: {'Content-Type': 'multipart/form-data'},
+        },
+      );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Image uploaded successfully:", data);
-        return data.imageUrl;
+      if (response.data.ok) {
+        console.log("Image uploaded successfully:", response.data);
+        return response.data.imageUrl;
       } else {
         console.error("Failed to upload the image.");
         return null;
@@ -141,21 +143,19 @@ const CreateMoviePage = ({onMovieAdded}) => {
 
       const newMovie = { ...movie, portraitImgUrl, landscapeImgUrl };
 
-      const response = await fetch(
-        `${backendUrl}/api/movie/createmovie`,
+      const response = await axios.post(
+        `${backendUrl}/api/movie/createmovie`, 
+        newMovie,
         {
-          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(newMovie),
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Movie creation successful", data);
+      if (response.data.ok) {
+        console.log("Movie creation successful", response.data);
 
         onMovieAdded();
         
@@ -163,7 +163,7 @@ const CreateMoviePage = ({onMovieAdded}) => {
           position: "top-center",
         });
       } else {
-        console.error("Movie creation failed", response.statusText);
+        console.error("Movie creation failed", response.data.message);
         toast.error("Movie Creation Failed", {
           position: "top-center",
         });

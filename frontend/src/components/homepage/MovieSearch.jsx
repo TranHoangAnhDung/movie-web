@@ -1,13 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import MovieListAPI from "../../api/movieListAPI";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { BsFillStarFill } from "react-icons/bs";
+
+import { backendUrl } from "../../App";
 
 const MovieSearch = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const params = useParams();
-  const { keyword } = params;
+  const [user, setUser] = useState(null);
+  const { keyword } = useParams();
+  const navigate = useNavigate();
+
+  const getUser = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/auth/getuser`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.data.ok) {
+        setUser(response.data.data);
+      } else {
+        window.location.href = "/Login";
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      window.location.href = "/Login";
+    }
+  };
 
   useEffect(() => {
     const searchMovies = async () => {
@@ -16,10 +39,18 @@ const MovieSearch = () => {
         setError(null);
 
         try {
-          const response = await MovieListAPI.getMovieSearch(keyword);
-          setMovies(response.results);
+          const response = await axios.get(
+            `${backendUrl}/api/movie/search/${keyword}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+
+          setMovies(response.data.data);
         } catch (error) {
-          setError("Lỗi khi tìm kiếm phim");
+          setError("Error fetch movies");
         } finally {
           setLoading(false);
         }
@@ -27,10 +58,11 @@ const MovieSearch = () => {
     };
 
     searchMovies();
+    getUser();
   }, [keyword]);
 
   return (
-    <div className="bg-black min-h-screen p-4">
+    <div className="bg-black min-h-screen p-10">
       <h1 className="text-3xl text-red-600 mb-4">
         Kết quả tìm kiếm cho: {keyword}
       </h1>
@@ -43,36 +75,35 @@ const MovieSearch = () => {
             <ul className="space-y-4">
               {movies.map((movie) => (
                 <li
-                  key={movie.id}
+                  key={movie._id}
                   className="text-white p-4 rounded-lg shadow-md flex items-center"
                 >
-                  {/* thêm hình ảnh và nút trailer cho moviesearch */}
                   <img
-                    src={`${import.meta.env.VITE_IMG_URL}${movie.poster_path}`}
+                    src={movie.portraitImgUrl}
                     alt={movie.title}
                     className="w-60 h-auto rounded mr-4"
                   />
 
-                  <div className="flex flex-col justify-center flex-grow">
+                  <div className="flex flex-col justify-center">
                     {" "}
-                    <h3 className="text-xl text-white font-semibold">
+                    <h1 className="text-xl text-white font-semibold">
                       {movie.title}
-                    </h3>
-                    <p>{movie.overview}</p>
-                    <p className="text-gray-300">
-                      Ngày phát hành: {movie.release_date}
+                    </h1>
+                    <p>{movie.description}</p>
+                    <p className="font-bold text-yellow-400 text-xl leading-10 flex">
+                      Rating:{" "}
+                      <BsFillStarFill className="text-yellow-500 mt-2 ml-2" />
+                      &nbsp;&nbsp;{movie.rating}/5
                     </p>
-                    <p className="font-bold text-yellow-400 text-xl leading-10">
-                      Rating: {Number(movie.vote_average).toFixed(1)}/10
-                    </p>
-                    {/* Nút Trailer */}
-                    <Link to={`/${movie.id}`}>
-                      <div className="flex gap-3 mt-2">
-                        <button className="p-3 rounded-md bg-red-600 hover:bg-red-800 transition-all font-bold">
-                          Chi tiết
-                        </button>
-                      </div>
-                    </Link>
+                    <button
+                      type="button"
+                      className="bg-red-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-red-700 transition-all duration-300 w-max mt-2"
+                      onClick={() =>
+                        navigate(`/${user.city}/movies/${movie._id}`)
+                      }
+                    >
+                      Detail
+                    </button>
                   </div>
                 </li>
               ))}

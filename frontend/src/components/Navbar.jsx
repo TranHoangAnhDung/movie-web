@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+
 import { motion, AnimatePresence } from "framer-motion";
 import LocationPopup from "../components/LocationPopup";
-import {RiArrowDropDownFill} from "react-icons/ri"
+import { RiArrowDropDownFill } from "react-icons/ri";
+
+import { backendUrl } from "../App";
 
 const Navbar = ({ userName, setUserName }) => {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(""); // search value
 
   const [showLocationPopup, setShowLocationPopup] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
 
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
@@ -22,55 +31,44 @@ const Navbar = ({ userName, setUserName }) => {
   });
 
   const getUser = async () => {
-    fetch("http://localhost:8080/api/auth/getuser", {
-        method: 'GET',
+    try {
+      const response = await axios.get(`${backendUrl}/api/auth/getuser`, {
         headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-    })
-        .then((res) => {
-            return res.json();
-        })
-        .then((response) => {
-            setUser(response.data)
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+      });
+      setUser(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-}
   const checkLogin = async () => {
-    fetch("http://localhost:8080/api/auth/checklogin", {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-      },
-  })
-      .then((res) => {
-          return res.json();
-      })
-      .then((response) => {
-          if(response.ok){
-              setLoggedIn(true)
-          }
-          else{
-              setLoggedIn(false)
-          }
-      })
-      .catch((error) => {
-          console.log(error)
-          setLoggedIn(false)
-      })
-  }
+    try {
+      const response = await axios.get(`${backendUrl}/api/auth/checklogin`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (response.data.ok) {
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoggedIn(false);
+    }
+  };
 
   const handleLogout = () => {
-    // Xóa thông tin đăng nhập khi người dùng logout
     localStorage.removeItem("userName");
     localStorage.removeItem("token");
     setUserName(null);
-    setLoggedIn(false)
+    setLoggedIn(false);
     navigate("/Login");
   };
 
@@ -80,18 +78,19 @@ const Navbar = ({ userName, setUserName }) => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+
     if (searchTerm.trim()) {
-      navigate(`/search/${searchTerm}`); // Điều hướng đến trang /search với query
-      setSearchTerm(""); // Reset ô tìm kiếm sau khi tìm
+      navigate(`/search/${searchTerm}`); 
+      setSearchTerm("");
     } else {
-      alert("Vui lòng nhập từ khóa tìm kiếm."); // Thông báo nếu ô tìm kiếm trống
+      toast.error("Please enter a search term.");
     }
   };
 
   useEffect(() => {
-    checkLogin()
-    getUser()
-  }, [])
+    checkLogin();
+    getUser();
+  }, []);
 
   return (
     <nav>
@@ -172,13 +171,15 @@ const Navbar = ({ userName, setUserName }) => {
 
         <div className="hidden md:flex items-center gap-4">
           {/* City Selection */}
-          <p
-            className="text-white font-semibold flex items-center gap-1 cursor-pointer hover:text-red-600 transition duration-300"
-            onClick={() => setShowLocationPopup(true)}
-          >
-            {user && loggedIn ? user.city : "Select City"}
-            <RiArrowDropDownFill className="text-xl" />
-          </p>
+          {isHomePage && (
+            <p
+              className="text-white font-semibold flex items-center gap-1 cursor-pointer hover:text-red-600 transition duration-300"
+              onClick={() => setShowLocationPopup(true)}
+            >
+              {user && loggedIn ? user.city : "Select City"}
+              <RiArrowDropDownFill className="text-xl" />
+            </p>
+          )}
           {showLocationPopup && (
             <LocationPopup setShowLocationPopup={setShowLocationPopup} />
           )}
@@ -260,8 +261,6 @@ const Navbar = ({ userName, setUserName }) => {
                     >
                       Home
                     </Link>
-
-              
                   </li>
                   <li>
                     <Link

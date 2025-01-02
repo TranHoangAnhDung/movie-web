@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import axios from "axios";
+import { BsFillStarFill } from "react-icons/bs";
+
+import { backendUrl } from "../App";
 
 const BuyTickets = () => {
   const { movieid, city } = useParams(); // Get params using React Router
@@ -15,18 +17,16 @@ const BuyTickets = () => {
 
   const getAvailableDates = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/movie/getavailabledates/${city}/${movieid}`,
+      const response = await axios.get(
+        `${backendUrl}/api/movie/getavailabledates/${city}/${movieid}`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      const data = await res.json();
-      if (data.ok) {
-        setAvailableDates(data.data);
+      if (response.data.ok) {
+        setAvailableDates(response.data.data);
       }
     } catch (err) {
       console.error(err);
@@ -35,19 +35,17 @@ const BuyTickets = () => {
 
   const getMovie = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/movie/movies/${movieid}`,
+      const response = await axios.get(
+        `${backendUrl}/api/movie/movies/${movieid}`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      const data = await res.json();
-      if (data.ok) {
-        console.log(data);
-        setMovie(data.data);
+      if (response.data.ok) {
+        console.log(response.data);
+        setMovie(response.data.data);
       }
     } catch (err) {
       console.error(err);
@@ -59,22 +57,20 @@ const BuyTickets = () => {
     const cityname = city;
 
     try {
-      const res = await fetch(
-        `http://localhost:8080/api/movie/screensbymovieschedule/${cityname}/${date}/${movieId}`,
+      const response = await axios.get(
+        `${backendUrl}/api/movie/screensbymovieschedule/${cityname}/${date}/${movieId}`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      const data = await res.json();
 
-      if (data.ok) {
-        setTheatres(data.data);
-        console.log(data.data);
+      if (response.data.ok) {
+        setTheatres(response.data.data);
+        console.log(response.data.data);
       } else {
-        console.error(data);
+        console.error(response.data);
       }
     } catch (err) {
       console.error(err);
@@ -94,37 +90,64 @@ const BuyTickets = () => {
   return (
     <>
       {movie && (
-        <div className="bg-gray-200 min-h-screen w-full">
-          <div className="bg-yellow">
-            <div className="bg-[var(--col2)] p-5">
-              <h1 className="text-white text-4xl font-semibold">
-                {movie.title}
-              </h1>
-              <h3 className="text-gray-500 text-sm font-semibold border border-gray-500 px-5 py-1 rounded-full w-fit">
-                {movie.genre.join(", ")}
-              </h3>
+        <div className="bg-gray-200 min-h-screen w-full pb-10">
+          <div>
+            <div className="bg-gradient-to-r from-black via-transparent to-black min-h-[50vh] p-12 flex justify-between">
+              <div className="flex items-center gap-5">
+                <div
+                  className="w-[300px] h-[400px] rounded-lg overflow-hidden relative bg-no-repeat bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${movie.portraitImgUrl})`,
+                  }}
+                >
+                  <p className="absolute bottom-0 bg-black text-white text-center w-full py-1 text-sm">
+                    In cinemas
+                  </p>
+                </div>
+                <div className="flex flex-col text-white gap-3">
+                  <p className="text-4xl font-semibold">{movie.title}</p>
+                  <p className="text-3xl font-semibold flex items-center gap-1">
+                    <BsFillStarFill className="text-yellow-500 mb-2" />
+                    &nbsp;&nbsp;{movie.rating}/5
+                  </p>
+                  <p className="text-lg font-medium mb-2">
+                    <i className="fa fa-clock text-yellow-500 px-2"></i>
+                    {movie.duration} mins
+                  </p>
+                  <p className="text-lg font-medium mb-4 text-gray-300">
+                    <i className="fa fa-tag text-yellow-500 px-2"></i>
+                    {movie.genre.join(", ")}
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* SHOW DATE */}
             <div className="flex justify-center space-x-4 my-5">
-              {availableDates.map((date, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedDate(date)}
-                  className={`py-2 px-4 rounded-full transition-all duration-300 ${
-                    selectedDate === date
-                      ? "bg-red-500 text-white"
-                      : "bg-white text-black"
-                  }`}
-                >
-                  {new Date(date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </button>
-              ))}
+              {availableDates.length > 0 ? (
+                availableDates.map((date, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedDate(date)}
+                    className={`py-2 px-4 rounded-full transition-all duration-300 ${
+                      selectedDate === date
+                        ? "bg-red-500 text-white"
+                        : "bg-white text-black"
+                    }`}
+                  >
+                    {new Date(date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </button>
+                ))
+              ) : (
+                <p className="text-gray-500 text-lg font-semibold">
+                  No Schedule for this movie yet
+                </p>
+              )}
             </div>
           </div>
 
@@ -142,7 +165,10 @@ const BuyTickets = () => {
                       .toISOString()
                       .split("T")[0];
 
-                    return (scheduleDate === selectedDateString && String(schedule.movieId) === String(movieid));         
+                    return (
+                      scheduleDate === selectedDateString &&
+                      String(schedule.movieId) === String(movieid)
+                    );
                   }
                 );
                 console.log(filteredSchedules);

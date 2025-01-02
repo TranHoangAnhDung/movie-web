@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+import { backendUrl } from "../App";
 
 const MyProfile = () => {
   const [bookings, setBookings] = useState(null);
 
   const getBookings = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/movie/getuserbookings",
+      const response = await axios.get(
+        `${backendUrl}/api/movie/getuserbookings`,
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      const data = await response.json();
-      if (data.ok) {
-        console.log(data.data);
-        setBookings(data.data);
+      if (response.data.ok) {
+        console.log(response.data.data);
+        setBookings(response.data.data);
       } else {
         console.error(data);
       }

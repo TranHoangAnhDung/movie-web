@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+import { backendUrl } from "../App";
 
 const LocationPopup = ({ setShowLocationPopup }) => {
   const [cities, setCities] = useState([]);
@@ -15,27 +18,26 @@ const LocationPopup = ({ setShowLocationPopup }) => {
     setCities(cityOptions);
   };
 
-  const handleSave = () => {
-    fetch("http://localhost:8080/api/auth/changecity", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
-      },
-      body: JSON.stringify({
-        city: selectedCity,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          setShowLocationPopup(false);
-          window.location.reload();
+  const handleSave = async () => {
+    try {
+      const response = await axios.post(
+        `${backendUrl}/api/auth/changecity`,
+        { city: selectedCity },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      })
-      .catch((err) => {
-        console.error("Error saving city:", err);
-      });
+      );
+
+      if (response.data.ok) {
+        setShowLocationPopup(false);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error saving city:", err);
+    }
   };
 
   useEffect(() => {

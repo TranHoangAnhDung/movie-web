@@ -9,6 +9,7 @@ import image from "../assets/noteicon.jpg";
 const ListSchedule = () => {
   const navigate = useNavigate();
   const [schedules, setSchedules] = useState([]);
+  
   const [filteredSchedules, setFilteredSchedules] = useState([]);
 
   // Lọc Movie //
@@ -30,7 +31,7 @@ const ListSchedule = () => {
     totalPrice: "",
   });
 
-  const handleDelete = async (scheduleId) => {
+  const handleDeleteSchedule = async (scheduleId) => {
     try {
       const response = await axios.delete(
         `${backendUrl}/api/movie/screens/${selectedSchedule.screenId}/movie-schedules/${scheduleId}`,
@@ -59,6 +60,7 @@ const ListSchedule = () => {
 
       if (response.data.ok && response.data.data.length > 0) {
         setSchedules(response.data.data);
+
         setFilteredSchedules(response.data.data);
 
         const uniqueMovies = [
@@ -81,8 +83,8 @@ const ListSchedule = () => {
   };
 
   const handleFilterChange = (movieName, screenName) => {
-    setSelectedMovie(movieName); // Update selected movie
-    setSelectedScreen(screenName); // Update selected screen
+    setSelectedMovie(movieName); // Cập nhật movie chọn
+    setSelectedScreen(screenName); // Cập nhật screen chọn
 
     let filtered = schedules;
 
@@ -298,7 +300,7 @@ const ListSchedule = () => {
 
                       <span
                         className="cursor-pointer text-red-500 hover:text-red-700"
-                        onClick={() => handleDelete(schedule._id)}
+                        onClick={() => handleDeleteSchedule(schedule._id)}
                       >
                         X
                       </span>

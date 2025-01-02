@@ -449,7 +449,7 @@ export const bookTicket = async (req, res, next) => {
     movieSchedule.notAvailableSeats.push(...seats);
     await screen.save();
 
-    user.bookings.push(newBooking._id);
+    user.bookings.push(newBooking);
     await user.save();
 
     res.status(201).json({
@@ -567,7 +567,6 @@ export const getScheduleByMovies = async (req, res, next) => {
     }
     return false;
   });
-  console.log(movieSchedules);
 
   if (!movieSchedules) {
     return res.status(404).json("Movie schedule not found");
@@ -607,32 +606,12 @@ export const getUserBookings = async (req, res, next) => {
   }
 };
 
-export const getUserBookingsId = async (req, res, next) => {
-  // /:id
-  try {
-    const bookingId = req.params.id;
-    const booking = await BookingModel.findById(bookingId);
-
-    if (!booking) {
-      return res.status(404).json("Booking not found");
-    }
-
-    res.status(200).json({
-      ok: true,
-      message: "Booking retrieved successfully",
-      data: booking,
-    });
-  } catch (error) {
-    res.json({ success: false, message: error.message });
-  }
-};
-
 export const getAvailableDates = async (req, res, next) => {
   try {
     const city = req.params.city;
     const movieId = req.params.movieid;
 
-    // Find all the schedules for the given movieId and city
+    // Find all the schedules for movieId and city
     const screens = await ScreenModel.find({ city }).populate("movieSchedules");
 
     let availableDates = [];
@@ -653,5 +632,34 @@ export const getAvailableDates = async (req, res, next) => {
     return res
       .status(500)
       .json({ ok: false, message: "Failed to fetch available dates" });
+  }
+};
+
+export const getMovieBySearch = async (req, res, next) => {
+  try {
+    const { keyword } = req.params;
+
+    const movies = await MovieModel.find({
+      $or: [
+        { title: { $regex: keyword, $options: "i" } }, 
+        { description: { $regex: keyword, $options: "i" } }, 
+        { genre: { $regex: keyword, $options: "i" } }, 
+      ],
+    });
+
+    if (movies.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        message: "No movies found with that keyword",
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Movies retrieved successfully",
+      data: movies,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };

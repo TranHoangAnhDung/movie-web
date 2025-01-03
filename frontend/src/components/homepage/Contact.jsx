@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -8,7 +9,7 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Xử lý gửi thông tin liên hệ ở đây
-    alert("Cảm ơn bạn đã gửi thông tin liên hệ!");
+    toast.success("Thank you for submitting your contact information!");
     setName("");
     setEmail("");
     setMessage("");
@@ -16,9 +17,9 @@ const Contact = () => {
 
   return (
     <div className="bg-black min-h-screen p-6">
-      <h1 className="text-4xl text-red-600 font-bold mb-8">Liên Hệ</h1>
+      <h1 className="text-4xl text-red-600 font-bold mb-8">Contact</h1>
       <p className="text-white mb-6">
-        Chúng tôi luôn sẵn sàng lắng nghe ý kiến của bạn.
+      We are always ready to listen to your opinions.
       </p>
 
       <form
@@ -27,7 +28,7 @@ const Contact = () => {
       >
         <div className="mb-4">
           <label className="block text-white mb-2" htmlFor="name">
-            Tên:
+            Name:
           </label>
           <input
             type="text"
@@ -53,7 +54,7 @@ const Contact = () => {
         </div>
         <div className="mb-4">
           <label className="block text-white mb-2" htmlFor="message">
-            Tin nhắn:
+            Message:
           </label>
           <textarea
             id="message"
@@ -68,7 +69,7 @@ const Contact = () => {
           type="submit"
           className="w-full p-3 bg-red-600 text-white font-semibold rounded hover:bg-red-500 transition duration-300"
         >
-          Gửi
+          Send
         </button>
       </form>
     </div>

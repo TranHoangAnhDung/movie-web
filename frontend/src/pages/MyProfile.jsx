@@ -48,7 +48,7 @@ const MyProfile = () => {
                 <p className="m-0 text-yellow-300">{booking.movieTitle}</p>
               </div>
               <div className="flex items-center mb-2.5">
-                <h3 className="mr-2.5 text-red-100 font-normal">Screen</h3>
+                <h3 className="mr-2.5 text-red-100 font-normal">Cinema</h3>
                 <p className="m-0 text-yellow-300">{booking.screenName}</p>
               </div>
               <div className="flex items-center mb-2.5">

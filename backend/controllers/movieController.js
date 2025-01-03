@@ -390,11 +390,6 @@ export const bookTicket = async (req, res, next) => {
     const movieSchedule = screen.movieSchedules.find((schedule) => {
       let showDate1 = new Date(schedule.showDate);
       let showDate2 = new Date(showDate);
-      // return (
-      //   showDate1.getTime() === showDate2.getTime() &&
-      //   schedule.showTime === showTime &&
-      //   schedule.movieId.toString() === movieId
-      // );
       if (
         showDate1.getDay() === showDate2.getDay() &&
         showDate1.getMonth() === showDate2.getMonth() &&
@@ -514,7 +509,6 @@ export const getScreensByMoviesSchedule = async (req, res, next) => {
     let temp = [];
     // Filter screens based on the showDate
     const filteredScreens = screens.forEach((screen) => {
-
       screen.movieSchedules.forEach((schedule) => {
         let showDate = new Date(schedule.showDate);
         let bodyDate = new Date(date);

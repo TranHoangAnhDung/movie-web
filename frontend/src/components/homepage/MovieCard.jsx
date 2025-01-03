@@ -25,7 +25,7 @@ const MovieCard = (data) => {
         />
 
         {/* Transparent overlay with content */}
-        <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 flex flex-col justify-center px-9 transition-opacity duration-300">
+        <div className="absolute inset-0 bg-black/70 opacity-0 hover:opacity-100 flex flex-col justify-center px-11 transition-opacity duration-300">
           <p className="text-white text-[18px] font-bold mb-4 group-hover:text-yellow-500">{title}</p>
           <p className="text-gray-300 text-[14px] font-medium">
             <i className="fa fa-tag text-yellow-500 pr-2"></i>

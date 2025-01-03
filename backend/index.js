@@ -38,6 +38,10 @@ app.use("/admin", adminRoute)
 app.use("/api/movie", movieRoute)
 app.use("/image", imageRoute)
 
+app.get("/", (req, res) => {
+  res.send("API Working")
+})
+
 app.listen(8080, () => {
   console.log("Server is running");
 });

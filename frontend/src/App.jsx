@@ -7,9 +7,6 @@ import "react-toastify/dist/ReactToastify.css"
 import Footer from "./components/Footer";
 
 import Navbar from "./components/Navbar";
-import MovieSearch from "./components/homepage/MovieSearch";
-import About from "./components/homepage/About";
-import Contact from "./components/homepage/Contact";
 import ScrollTopTop from "./components/detailmoviepage/ScrollToTop";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL

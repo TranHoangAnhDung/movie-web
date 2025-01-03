@@ -91,7 +91,7 @@ const SelectSeat = () => {
       screen.movieSchedulesforDate[selectedScheduleIndex].notAvailableSeats;
 
     return (
-      <div>
+      <div className="max-w-full mx-auto px-4">
         {screen.screen.seats.map((seatType, index) => (
           <div className="bg-white p-4 m-4" key={index}>
             <h2 className="text-base font-normal mb-2 border border-gray-300 px-5 py-2 rounded-full">
@@ -198,7 +198,7 @@ const SelectSeat = () => {
       {movie && screen && (
         <div className="bg-white">
           <div className="bg-col2 p-4">
-            <h1 className="text-black text-2xl font-semibold py-4">
+            <h1 className="text-black text-2xl font-semibold py-6">
               {movie.title} - {screen.screen.name}
             </h1>
             <h3 className="text-gray-600 text-sm font-semibold border border-gray-400 py-1 px-5 rounded-full w-[15%]">
@@ -249,7 +249,7 @@ const SelectSeat = () => {
 
           {/* SCREEN ICON */}
           <div className="flex justify-center items-center my-14">
-            <div className="relative w-96 h-18 bg-gradient-to-t from-gray-800 to-transparent rounded-b-full text-white text-center font-bold text-sm flex justify-center items-center">
+            <div className="relative w-full sm:w-96 h-18 bg-gradient-to-t from-gray-800 to-transparent rounded-b-full text-white text-center font-bold text-sm flex justify-center items-center">
               SCREEN
               <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4/5 h-1 bg-white"></div>
             </div>

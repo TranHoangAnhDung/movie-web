@@ -4,8 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios"
 
 import Title from "../components/Title";
-import image1 from "../assets/stripe_logo.png";
-import image2 from "../assets/razorpay_logo.png";
+import { backendUrl } from "../App";
 
 const Payment = () => {
   const location = useLocation();
@@ -22,39 +21,37 @@ const Payment = () => {
   });
 
   const seatNames = selectedSeats.map((seat) => {
-    const row = seat.row; // Row like 'A', 'B', etc.
+    const row = seat.row;
     const seatNumber = seat.seat_id.slice(1); // Extract seat number
     return `${row}${seatNumber}`; // Format like B5, A1, etc.
   });
 
   const handlePayNow = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/movie/bookticket",
+      const response = await axios.post(
+        `${backendUrl}/api/movie/bookticket`,
         {
-          method: "POST",
+          showTime: selectedTime.showTime,
+          showDate: date,
+          movieId: movie._id,
+          screenId: screen.screen._id,
+          seats: selectedSeats,
+          totalPrice,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({
-            showTime: selectedTime.showTime,
-            showDate: date,
-            movieId: movie._id,
-            screenId: screen.screen._id,
-            seats: selectedSeats,
-            totalPrice,
-          }),
+          }
         }
       );
 
-      const data = await response.json();
-      if (data.ok) {
+      if (response.data.ok) {
         toast.success("Payment successful! Booking confirmed.");
         // Redirect to a confirmation or home page
-        navigate("/", { state: data.data });
+        navigate("/", { state: response.data.data });
       } else {
-        toast.error(data.message || "Payment failed.");
+        toast.error(response.data.message || "Payment failed.");
       }
     } catch (err) {
       console.error(err);
@@ -64,7 +61,7 @@ const Payment = () => {
 
   const getUser = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/auth/getuser", {
+      const response = await axios.get(`${backendUrl}/api/auth/getuser`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -115,7 +112,7 @@ const Payment = () => {
           </form>
         </div>
 
-        {/* Right side - Booking Details and Payment Method */}
+        {/* Right side - Booking Details*/}
         <div className="w-full lg:w-1/2">
           {/* Booking Details */}
           <div className="mb-8">

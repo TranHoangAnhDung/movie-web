@@ -21,8 +21,8 @@ const Banner = () => {
   };
 
   const images = [
-    "https://res.cloudinary.com/dm8km2abq/image/upload/v1734789742/movie-banner_b7mckv.jpg",
-    "https://res.cloudinary.com/dm8km2abq/image/upload/v1734789742/cinema-banner_yduiua.jpg",
+    "https://res.cloudinary.com/dm8km2abq/image/upload/c_fill,w_360,h_150/v1734789742/movie-banner_b7mckv.jpg",
+    "https://res.cloudinary.com/dm8km2abq/image/upload/c_fill,w_360,h_150/v1735829984/cinema-banner_afhlxf.jpg",
   ];
 
   return (

@@ -14,6 +14,7 @@ const BuyTickets = () => {
   const [movie, setMovie] = useState(null);
   const [theatres, setTheatres] = useState(null);
   const [availableDates, setAvailableDates] = useState([]);
+  const [isDateSelected, setIsDateSelected] = useState(false);
 
   const getAvailableDates = async () => {
     try {
@@ -128,7 +129,9 @@ const BuyTickets = () => {
                 availableDates.map((date, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedDate(date)}
+                    onClick={() => {setSelectedDate(date)
+                      setIsDateSelected(true)}
+                    }
                     className={`py-2 px-4 rounded-full transition-all duration-300 ${
                       selectedDate === date
                         ? "bg-red-500 text-white"
@@ -151,7 +154,7 @@ const BuyTickets = () => {
             </div>
           </div>
 
-          {theatres && theatres.length > 0 && (
+          {isDateSelected && theatres && theatres.length > 0 && (
             <div className="w-11/12 mx-auto my-5 shadow-lg bg-white p-5 rounded-lg">
               {theatres.map((screen, index) => {
                 // Lọc các lịch chiếu theo ngày được chọn

@@ -38,65 +38,59 @@ const MyProfile = () => {
         <h2 className="text-xl font-semibold text-white">Booking Detail</h2>
         <div className="flex flex-wrap gap-2.5 w-full justify-center">
           {/* BOOKING CARD */}
-          {bookings && bookings.length > 0 ? (
-            bookings.map((booking) => (
-              <div
-                className="my-5 border border-gray-300 rounded p-4"
-                key={booking._id}
-              >
-                <div className="flex items-center mb-2.5">
-                  <h3 className="mr-2.5 text-red-100 font-normal">Movie</h3>
-                  <p className="m-0 text-yellow-300">{booking.movieTitle}</p>
-                </div>
-                <div className="flex items-center mb-2.5">
-                  <h3 className="mr-2.5 text-red-100 font-normal">Cinema</h3>
-                  <p className="m-0 text-yellow-300">{booking.screenName}</p>
-                </div>
-                <div className="flex items-center mb-2.5">
-                  <h3 className="mr-2.5 text-red-100 font-normal">Location</h3>
-                  <p className="m-0 text-yellow-300">
-                    {booking.screenId?.location}
-                  </p>
-                </div>
-                <div className="flex items-center mb-2.5">
-                  <h3 className="mr-2.5 text-red-100 font-normal">Seats</h3>
-                  <p className="m-0 text-yellow-300">
-                    {booking.seats.map((seat, index) => {
-                      return (
-                        <span className="flex gap-2" key={index}>
-                          {seat.seat_id}{" "}
-                        </span>
-                      );
-                    })}
-                  </p>
-                </div>
-                <div className="flex items-center mb-2.5">
-                  <h3 className="mr-2.5 text-red-100 font-normal">
-                    Price Paid
-                  </h3>
-                  <p className="m-0 text-yellow-300">$ {booking.totalPrice}</p>
-                </div>
-
-                <div className="flex items-center mb-2.5">
-                  <h3 className="mr-2.5 text-red-100 font-normal">Show Date</h3>
-                  <p className="m-0 text-yellow-300">
-                    {new Date(booking.showDate).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </p>
-                </div>
-                <div className="flex items-center mb-2.5">
-                  <h3 className="mr-2.5 text-red-100 font-normal">Show Time</h3>
-                  <p className="m-0 text-yellow-300">{booking.showTime}</p>
-                </div>
+          {bookings?.map((booking) => (
+            <div
+              className="my-5 border border-gray-300 rounded p-4"
+              key={booking._id}
+            >
+              <div className="flex items-center mb-2.5">
+                <h3 className="mr-2.5 text-red-100 font-normal">Movie</h3>
+                <p className="m-0 text-yellow-300">{booking.movieTitle}</p>
               </div>
-            ))
-          ) : (
-            <h1 className="text-white text-center my-10 text-2xl">No Bookings to show</h1>
-          )}
+              <div className="flex items-center mb-2.5">
+                <h3 className="mr-2.5 text-red-100 font-normal">Cinema</h3>
+                <p className="m-0 text-yellow-300">{booking.screenName}</p>
+              </div>
+              <div className="flex items-center mb-2.5">
+                <h3 className="mr-2.5 text-red-100 font-normal">Location</h3>
+                <p className="m-0 text-yellow-300">
+                  {booking.screenId?.location}
+                </p>
+              </div>
+              <div className="flex items-center mb-2.5">
+                <h3 className="mr-2.5 text-red-100 font-normal">Seats</h3>
+                <p className="m-0 text-yellow-300">
+                  {booking.seats.map((seat, index) => {
+                    return (
+                      <span className="flex gap-2" key={index}>
+                        {seat.seat_id}{" "}
+                      </span>
+                    );
+                  })}
+                </p>
+              </div>
+              <div className="flex items-center mb-2.5">
+                <h3 className="mr-2.5 text-red-100 font-normal">Price Paid</h3>
+                <p className="m-0 text-yellow-300">$ {booking.totalPrice}</p>
+              </div>
+
+              <div className="flex items-center mb-2.5">
+                <h3 className="mr-2.5 text-red-100 font-normal">Show Date</h3>
+                <p className="m-0 text-yellow-300">
+                  {new Date(booking.showDate).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+              <div className="flex items-center mb-2.5">
+                <h3 className="mr-2.5 text-red-100 font-normal">Show Time</h3>
+                <p className="m-0 text-yellow-300">{booking.showTime}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
